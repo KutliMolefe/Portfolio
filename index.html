@@ -587,6 +587,139 @@ section{
     background: #D69A29;
 }
 
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    nav {
+        height: 60px;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo {
+        margin-left: 20px;
+        margin-right: 20px;
+        font-size: 16px;
+    }
+
+    .text {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .text h1 {
+        font-size: 60px;
+    }
+
+    .text p {
+        font-size: 15px;
+    }
+
+    .image {
+        width: 100%;
+    }
+
+    .image img {
+        top: 0;
+        left: 0;
+    }
+
+    section {
+        flex-direction: column;
+    }
+
+    .menu {
+        font-size: 20px;
+        width: 80px;
+    }
+
+    /* Card Styles for smaller screens */
+    .card {
+        width: 100%;
+        height: auto;
+    }
+
+    .card img {
+        height: 50%;
+    }
+
+    /* About Me Section */
+    .about-container {
+        flex-direction: column;
+    }
+
+    .about-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .about-text {
+        font-size: 14px;
+    }
+
+    .portfolio h2 {
+        font-size: 20px;
+    }
+
+    .work-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .skills {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .text h1 {
+        font-size: 40px;
+    }
+
+    .text p {
+        font-size: 14px;
+    }
+
+    .menu {
+        width: 60px;
+        font-size: 18px;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .text-content, .image-content {
+        width: 100%;
+        text-align: center;
+    }
+
+    .text-content h1 {
+        font-size: 36px;
+    }
+
+    .text-content p {
+        font-size: 16px;
+    }
+
+    .overlay-image img {
+        width: 120px;
+        height: 250px;
+    }
+
+    .background-image {
+        height: 250px;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .work-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
 	</style>
     <title>Kutloano Molefe</title>
@@ -600,8 +733,7 @@ section{
 
                 <span>Kutloano<br> Molefe </span>
             </div>
-            <a href="index.html" class="active">Home</a>
-            <a href="projects.html">Projects</a>
+          
            
             
         </nav>
