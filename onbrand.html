@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Website showcasing the development process and technologies used">
+    <title>Website Showcase</title>
+    <style>
+	/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #333;
+    line-height: 1.6;
+    padding-top: 20px;
+}
+
+/* Header */
+header {
+    background-color: #f4f4f4;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+header .container {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+header nav ul li a:hover {
+    color: #007bff;
+}
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+        align-items: flex-start; /* Align items to the left */
+        text-align: left; /* Align text to the left */
+    }
+
+    header h1 {
+        font-size: 20px; /* Slightly smaller font size */
+        margin-top: 10px;
+    }
+
+    header nav ul {
+        flex-direction: column; /* Stack navigation items vertically */
+        align-items: flex-start; /* Align items to the left */
+        margin-top: 15px;
+    }
+
+    header nav ul li {
+        margin-left: 0; /* Remove left margin on smaller screens */
+        margin-bottom: 10px; /* Add some spacing between nav items */
+    }
+
+    header nav ul li a {
+        font-size: 16px; /* Slightly smaller font size */
+    }
+
+    /* Mobile-specific styling for the back arrow */
+    header .container > div {
+        display: flex;
+        justify-content: flex-start; /* Align the back arrow to the left */
+        width: 100%;
+    }
+
+    header a {
+        font-size: 20px; /* Adjust size for smaller screens */
+    }
+}
+
+/* Section Styling */
+.section {
+    padding: 40px 0;
+}
+
+.section h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.section p {
+    font-size: 16px;
+    color: #666;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+/* Section for Videos */
+#videos .video-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.video-container {
+    flex: 1;
+    max-width: 48%;
+}
+
+.video-container video {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+}
+
+.video-description {
+    flex: 1;
+    max-width: 48%;
+}
+
+.video-description h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.video-description p {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .video-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .video-container, .video-description {
+        max-width: 100%;
+    }
+}
+
+
+/* Image Gallery */
+.image-gallery {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.image-gallery img {
+    width: 30%;
+    height: auto;
+    border: 1px solid #ddd;
+}
+
+/* List of Technologies */
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #f4f4f4;
+    padding: 10px 0;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    margin-top: 40px;
+}
+
+footer p {
+    color: #666;
+    font-size: 14px;
+}
+
+	</style>
+</head>
+<body>
+    <header>
+        <div class="container">
+		<div style="display: flex; align-items: center;">
+            <a href="index.html" style="
+                text-decoration: none;
+                color: #333;
+                font-size: 24px;
+                font-weight: bold;
+                margin-right: 15px;
+                display: flex;
+                align-items: center;
+            ">
+                &#8592; <!-- Unicode for the left arrow -->
+            </a>
+            <h1>Website Showcase</h1>
+        </div>
+            <nav>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#videos">Videos</a></li>
+                    <li><a href="#images">Images</a></li>
+                    <li><a href="#tech">Technologies</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="overview" class="section">
+        <div class="container">
+            <h2>Website Design for OnBrand Marketing Communications</h2>
+          
+        </div>
+    </section>
+
+  <section id="videos" class="section">
+    <div class="container">
+        <h2>Website Videos</h2>
+        <p>Here are some videos demonstrating the website's features and functionalities:</p>
+        <div class="video-section">
+            <div class="video-container">
+                <video autoplay loop muted>
+                    <source src="macbook-subtle-turn.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-description">
+                
+                <p>Key Features of the Website:
+Company Portfolio: The website prominently features OnBrand’s services and showcases the marketing projects they've worked on. This is presented in a clean, organized layout using images, videos, and detailed descriptions to give visitors insight into their expertise and success stories.
+
+Service Overview: The services section outlines the range of marketing communication services OnBrand offers, helping potential clients understand how they can benefit from working with the company.
+
+Project Showcase: The website displays a curated list of OnBrand’s past projects. This is done through an image gallery and video sections, providing visual evidence of their work, along with brief descriptions of each project.
+
+Interactive Video and Image Sections: The website incorporates video and image galleries, offering a dynamic experience for users. The videos automatically play in a loop, providing a visual demonstration of the company’s work, while the images offer a snapshot of past campaigns.
+
+Contact Information: The contact section ensures easy communication with OnBrand Marketing Communications. It includes all necessary details for reaching the company, such as email, phone, and a contact form, along with a map for location-based queries.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+    <section id="images" class="section">
+        <div class="container">
+            
+            <div class="image-gallery">
+                <img src="onbrand1.png" alt="Screenshot 1">
+                <img src="onbrand2.png" alt="Screenshot 2">
+                <img src="onbrand3.png" alt="Screenshot 3">
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="section">
+        <div class="container">
+            <h2>Coding Languages and Technologies Used</h2>
+            <p>This website was built using the following technologies:</p>
+            <ul>
+                <li><strong>HTML</strong> for structure</li>
+                <li><strong>CSS</strong> for styling</li>
+                <li><strong>JavaScript</strong> for interactivity</li>
+                
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Website Showcase. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

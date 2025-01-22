@@ -18,6 +18,7 @@
 }
 
 body{
+overflow-x: hidden;
     height: 100vh;
     width: 100vw;
      overflow-y: auto;
@@ -201,11 +202,11 @@ section{
     width: 40%;
 }
 
-.image img{
-    position: absolute;
-    height: 90%;
-    top: -10%;
-    left: -23%;
+.image video{
+ width: 100%;
+    height: auto;
+    display: block;
+	padding-left:100px;
 }
 
 .arrow-down{
@@ -564,8 +565,9 @@ section{
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px; /* Space between blocks */
-    max-width: 900px; /* Adjust the container width */
+    max-width: 990px; /* Adjust the container width */
     margin: 0 auto; /* Center the container */
+    align-items: center; /* Vertically center the items */
 }
 
 .language {
@@ -573,19 +575,21 @@ section{
     padding: 20px;
     border-radius: 15px;
     font-size: 14px;
-	display: inline-block;
-    width: calc(33.33% - 15px);
-    height: 15px; /* Set the height here */
     text-align: center;
     font-weight: bold;
     transition: transform 0.3s ease, background 0.3s ease;
+    width: calc(33.33% - 25px);
+    height: auto; /* Allow the height to adjust based on content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 
 .language:hover {
     transform: scale(1.1);
     background: #D69A29;
 }
+
 
 /* Media Queries for responsiveness */
 @media (max-width: 768px) {
@@ -720,6 +724,17 @@ section{
         grid-template-columns: 1fr;
     }
 }
+.video {
+    width: 50%;
+    max-width: 600px; /* Adjust based on your design */
+    margin: 0 auto;
+}
+
+.video video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
 
 	</style>
     <title>Kutloano Molefe</title>
@@ -746,7 +761,10 @@ section{
                 <button>View Work <span><i class="ri-arrow-right-line"></i></span></button>
             </div>
             <div class="image">
-                <img src="code.PNG" alt="">
+        <video autoplay loop muted>
+        <source src="Video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
             </div>
             <img src="images/arrow.png" class="arrow-down" alt="">
         </section>
@@ -785,8 +803,8 @@ section{
         <div class="portfolio">
    <h2>VIEW MY WORK</h2>
         <div class="work-grid">
-            <a href="project-ryde.html" class="work-item">
-                <img src="portfolio1.PNG" alt="RYDE">
+            <a href="rare.html" class="work-item">
+                <img src="rare.png" alt="RYDE">
                 <p>e-commerce Mobile and Web Application</p>
                 <div class="languages-list">
                     <div class="language">React</div>
@@ -796,17 +814,19 @@ section{
                     <div class="language">Node.js</div>
                 </div>
             </a>
-            <a href="project-ada.html" class="work-item">
-                <img src="portfolio2.jpg" alt="ADA">
+            <a href="onbrand.html" class="work-item">
+                <img src="onbrand.png" alt="ADA">
                 <p>Web Application</p>
+				<div class="languages-list">
+				<div class="language">HTML</div>
+                    <div class="language">CSS</div>
+                    <div class="language">JavaScript</div>
+				 </div>	
             </a>
-            <a href="project-espy.html" class="work-item">
-                <img src="portfolio3.jpg" alt="ESPY.">
-                <p>Budget Tracker</p>
-            </a>
+            
             <a href="project-dash.html" class="work-item">
                 <img src="portfolio4.jpg" alt="D.A.S.H.">
-                <p>D.A.S.H.</p>
+                <p>e-commerce website(coming soon)</p>
             </a>
         </div>
     </div>
