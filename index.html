@@ -17,6 +17,10 @@
     box-sizing: border-box;
 }
 
+ html {
+            scroll-behavior: smooth;
+        }
+		
 body{
 overflow-x: hidden;
     height: 100vh;
@@ -756,9 +760,9 @@ section{
             <div class="text">
                 
                 <h1>Software<br>Developer</h1>
-                <p>I am a <strong>Full-Stack developer</strong> and <strong>mobile app developer</strong>assionate about building responsive, user-friendly web and mobile applications. With expertise in frontend and backend technologies, as well as cross-platform mobile development, I create seamless, scalable solutions that meet user needs and business goals.</p>
+                <p>I am a aspiring<strong>Full-Stack developer</strong> and <strong>mobile app developer</strong> passionate about building responsive, user-friendly web and mobile applications. With expertise in frontend and backend technologies, as well as cross-platform mobile development, I create seamless, scalable solutions that meet user needs and business goals.</p>
 				
-                <button>View Work <span><i class="ri-arrow-right-line"></i></span></button>
+                <button onclick="window.location.hash = 'portfolio'">View Work <span><i class="ri-arrow-right-line"></i></span></button>
             </div>
             <div class="image">
         <video autoplay loop muted>
@@ -800,7 +804,7 @@ section{
         </section>
 		<!-- Section for Projects -->
        
-        <div class="portfolio">
+        <div id="portfolio" class="portfolio">
    <h2>VIEW MY WORK</h2>
         <div class="work-grid">
             <a href="rare.html" class="work-item">
