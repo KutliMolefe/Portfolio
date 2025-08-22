@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate & Health Analysis - Uganda Districts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0a3d62 0%, #1e5799 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-section {
+            padding: 60px 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: #0a3d62;
+            font-weight: 600;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .image-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .selector-btn {
+            padding: 12px 24px;
+            background: #f5f5f7;
+            border: 1px solid #d2d2d7;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .selector-btn:hover {
+            background: #e9e9ed;
+        }
+        
+        .selector-btn.active {
+            background: #0a3d62;
+            color: white;
+            border-color: #0a3d62;
+        }
+        
+        .dashboard-image {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transition: opacity 0.5s ease;
+        }
+        
+        .findings-section {
+            padding: 60px 0;
+            background: #f5f5f7;
+        }
+        
+        .key-findings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .finding-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .finding-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .finding-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0a3d62;
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+        
+        .finding-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #0a3d62;
+        }
+        
+        .conclusion-section {
+            padding: 60px 0;
+            background: white;
+            text-align: center;
+        }
+        
+        .conclusion-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .recommendation-box {
+            background: #f0f7ff;
+            border-left: 4px solid #0a3d62;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        footer {
+            background: #1d1d1f;
+            color: #f5f5f7;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .image-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .selector-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Climate & Health Analysis</h1>
+            <p class="subtitle">Exploring the relationship between climate patterns and disease prevalence across 9 Uganda Districts</p>
+        </div>
+    </header>
+    
+    <section class="dashboard-section">
+        <div class="container">
+            <h2 class="section-title">Interactive Dashboard</h2>
+            <div class="dashboard-container">
+                <div class="image-selector">
+                    <button class="selector-btn active" data-image="default">Default View</button>
+                    <button class="selector-btn" data-image="temperature">Highest Temperature</button>
+                    <button class="selector-btn" data-image="malaria">Malaria Peak</button>
+                </div>
+                
+                <img id="dashboard-image" src="https://via.placeholder.com/900x500/0a3d62/ffffff?text=Power+BI+Dashboard+Default+View" alt="Power BI Dashboard" class="dashboard-image">
+            </div>
+        </div>
+    </section>
+    
+    <section class="findings-section">
+        <div class="container">
+            <h2 class="section-title">Key Findings</h2>
+            <div class="key-findings">
+                <div class="finding-card">
+                    <div class="finding-number">1</div>
+                    <h3 class="finding-title">Dominance of Malaria</h3>
+                    <p>Malaria is the most significant public health burden among the diseases analyzed, accounting for <strong>49.9% of all reported cases</strong> (1,448 cases). This highlights its overwhelming priority for healthcare resources and intervention strategies.</p>
+                </div>
+                
+                <div class="finding-card">
+                    <div class="finding-number">2</div>
+                    <h3 class="finding-title">Seasonal Epidemic Pattern</h3>
+                    <p>A clear and pronounced seasonal pattern for malaria is observed. Cases begin to rise in May, peak dramatically in June, and remain high through October. This spike correlates strongly with the rainy seasons.</p>
+                </div>
+                
+                <div class="finding-card">
+                    <div class="finding-number">3</div>
+                    <h3 class="finding-title">Temperature Range for Peak Transmission</h3>
+                    <p>The peak of malaria transmission (5,574 cases) occurs at a maximum temperature of 26.7°C. This temperature falls within the optimal range for mosquito survival and parasite development.</p>
+                </div>
+                
+                <div class="finding-card">
+                    <div class="finding-number">4</div>
+                    <h3 class="finding-title">Secondary Health Concern</h3>
+                    <p>Skin diseases represent the second most common health issue, though their incidence is significantly lower than malaria. This suggests environmental factors also play a major role in population health.</p>
+                </div>
+                
+                <div class="finding-card">
+                    <div class="finding-number">5</div>
+                    <h3 class="finding-title">Annual Temperature Context</h3>
+                    <p>Temperatures are highest in February (reaching a maximum of 30.3°C), which is outside the peak malaria season. This indicates that extremely high temperatures alone are not the primary driver.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="conclusion-section">
+        <div class="container">
+            <h2 class="section-title">Conclusion & Recommendation</h2>
+            <div class="conclusion-content">
+                <p>The analysis confirms that malaria is a hyper-endemic, climate-sensitive disease in these Ugandan districts. Public health efforts cannot be static; they must be dynamically targeted.</p>
+                
+                <div class="recommendation-box">
+                    <h3>Recommendation</h3>
+                    <p>Resources for malaria prevention (e.g., insecticide-treated net distributions, community spraying programs) and clinical preparation (e.g., ensuring clinics are stocked with antimalarial drugs) must be scaled up proactively ahead of the May-October high-risk window. Focus should be greatest in districts with the highest case loads during this period.</p>
+                </div>
+                
+                <p><strong>Next Step:</strong> A deeper analysis could investigate why specific districts have higher incidence than others within the same climate pattern to identify additional social or environmental risk factors.</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>Climate and Health Analysis Dashboard for 9 Uganda Districts</p>
+            <p>Data Visualization Portfolio Project</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectorButtons = document.querySelectorAll('.selector-btn');
+            const dashboardImage = document.getElementById('dashboard-image');
+            
+            // Image URLs - replace these with your actual image paths
+            const imageMap = {
+                'default': 'default.png',
+                'temperature': 'maxtemp.png',
+                'malaria': 'MaxDieseas.png'
+            };
+            
+            selectorButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    selectorButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the image key from data attribute
+                    const imageKey = this.getAttribute('data-image');
+                    
+                    // Fade out current image
+                    dashboardImage.style.opacity = 0;
+                    
+                    // After fade out, change image and fade in
+                    setTimeout(() => {
+                        dashboardImage.src = imageMap[imageKey];
+                        dashboardImage.alt = `Power BI Dashboard - ${imageKey} view`;
+                        
+                        // Fade in new image
+                        setTimeout(() => {
+                            dashboardImage.style.opacity = 1;
+                        }, 50);
+                    }, 300);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
