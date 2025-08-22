@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kutloano Molefe | Data & AI Specialist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ffffff;
+            --secondary: #f8f9fa;
+            --accent: #2563eb;
+            --accent-alt: #4f46e5;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --card-hover-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            padding: 60px 0 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: var(--text);
+            font-weight: 700;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        
+        .title {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .card {
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+        
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .card h3 i {
+            margin-right: 10px;
+        }
+        
+        .skill-list {
+            list-style: none;
+        }
+        
+        .skill-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        
+        .skill-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+        
+        .profile-summary {
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: center;
+            padding: 30px;
+            background: var(--secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .profile-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .contact-item:hover {
+            color: var(--accent);
+        }
+        
+        .contact-item i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Project Cards Section */
+        .projects-section {
+            margin: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text);
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .project-card {
+            background: var(--secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+        
+        .project-card-header {
+            padding: 20px;
+            background: var(--accent);
+            color: white;
+        }
+        
+        .project-card-header h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .project-card-tools {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .project-card-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+        
+        .project-card-content ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .project-card-content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .project-card-content li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+        
+        .project-card-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .view-project-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .view-project-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>KUTLOANO MOLEFE</h1>
+                <div class="title">Data Scientist & AI Specialist</div>
+                <h2>Bachelor of Science in Computer Science</h2>
+                
+                <div class="contact-info">
+                    <a href="#" class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </a>
+                    <a href="#" class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Phone</span>
+                    </a>
+                    <a href="#" class="contact-item">
+                        <i class="fab fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="#" class="contact-item">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <section class="profile-summary">
+            <h3><i class="fas fa-user"></i> PROFILE SUMMARY</h3>
+            <p>A results-driven and quantitatively-focused graduate with a passion for applying advanced machine learning, statistical modelling, and data engineering to solve complex problems. Proven project experience in developing end-to-end data pipelines (ETL), building predictive models, and creating insightful dashboards for strategic decision-making. Possessing a strong foundation in actuarial and statistical principles, complemented by hands-on technical proficiency in Python, SQL, Java, Power BI, and advanced MS Excel.</p>
+        </section>
+        
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-graduation-cap"></i> EDUCATION</h3>
+                <ul class="skill-list">
+                    <li><strong>Bachelor of Science in Computer Science</strong><br>Eduvos | 2022-2024<br>Average: 73%</li>
+                    <li><strong>Computer Science Program</strong><br>University of Pretoria | Feb 2025 – Jun 2025</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-book"></i> RELEVANT COURSEWORK</h3>
+                <ul class="skill-list">
+                    <li>Mathematics 1A and 1B (Calculus)</li>
+                    <li>Statistical Modelling (Regression, Hypothesis Testing, Classification, Optimization)</li>
+                    <li>Database Systems (SQL Optimization, Star Schemas)</li>
+                    <li>Data Analytics (Time-Series, Clustering)</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-brain"></i> AI/ML SPECIALTIES</h3>
+                <ul class="skill-list">
+                    <li>Genetic Algorithms</li>
+                    <li>Neural Networks</li>
+                    <li>Statistical Testing (Wilcoxon)</li>
+                    <li>Optimization (ACO, Tabu Search)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-chart-bar"></i> DATA VISUALIZATION</h3>
+                <ul class="skill-list">
+                    <li>Power BI (DAX, Power Query)</li>
+                    <li>SQL (data modeling, querying, star schema)</li>
+                    <li>Excel (including Power Query)</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-code"></i> PROGRAMMING</h3>
+                <ul class="skill-list">
+                    <li>Java</li>
+                    <li>Python</li>
+                    <li>SQL</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-tools"></i> TECHNICAL TOOLS</h3>
+                <ul class="skill-list">
+                    <li>Research & Process Tools: UML diagrams, ERD diagrams</li>
+                    <li>Deployment & Web Servers: Apache configuration, Linux deployment, CGI programming</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Projects Section -->
+        <section class="projects-section">
+            <h2 class="section-title">PROJECT PORTFOLIO</h2>
+            
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <a href="project1.html" class="project-card">
+                    <div class="project-card-header">
+                        <h3>Financial Stock Prediction Using Machine Learning Models</h3>
+                        <div class="project-card-tools">Python (Scikit-Learn), Weka</div>
+                    </div>
+                    <div class="project-card-content">
+                        <ul>
+                            <li>Developed three classification models (Genetic Programming, Multi-Layer Perceptron, Decision Tree) to predict stock purchases from historical data.</li>
+                            <li>Applied Wilcoxon signed-rank tests to statistically compare model performance (GP vs. MLP).</li>
+                        </ul>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 2 -->
+                <a href="project2.html" class="project-card">
+                    <div class="project-card-header">
+                        <h3>Climate-Health ETL Pipeline & Dashboard</h3>
+                        <div class="project-card-tools">Python (Pandas), SQLite, Power BI, VS Code</div>
+                    </div>
+                    <div class="project-card-content">
+                        <ul>
+                            <li>Developed an end-to-end ETL pipeline analyzing 436 health-weather records across 9 Ugandan districts.</li>
+                            <li>Cleaned data (handled missing values, automated validation) using Pandas.</li>
+                            <li>Built a SQLite database with optimized queries to aggregate trends.</li>
+                        </ul>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 3 -->
+                <a href="project3.html" class="project-card">
+                    <div class="project-card-header">
+                        <h3>Team Orienteering Problem (TOP) Solver</h3>
+                        <div class="project-card-tools">Java</div>
+                    </div>
+                    <div class="project-card-content">
+                        <ul>
+                            <li>Designed an Ant Colony Optimization (ACO) algorithm to maximize rewards for vehicle fleets under time/distance constraints.</li>
+                            <li>Implemented pheromone updates, heuristic-based node selection, and constraint handling for feasible routes.</li>
+                            <li>Analysed results from 10+ stochastic runs to validate robustness.</li>
+                        </ul>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 4 -->
+                <a href="project2.html" class="project-card">
+                    <div class="project-card-header">
+                        <h3>Traveling Salesman Problem (TSP) Optimization</h3>
+                        <div class="project-card-tools">Java</div>
+                    </div>
+                    <div class="project-card-content">
+                        <ul>
+                            <li>Compared Simulated Annealing (SA) and Tabu Search on TSP instances (8–25 cities).</li>
+                            <li>Evaluated perturbation methods, neighbourhood definitions, and runtime performance.</li>
+                            <li>Demonstrated adaptability in tuning hyperparameters for optimal solutions.</li>
+                        </ul>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 5 -->
+                <a href="project5.html" class="project-card">
+                    <div class="project-card-header">
+                        <h3>Financial Health Dashboard</h3>
+                        <div class="project-card-tools">Power BI, SQL</div>
+                    </div>
+                    <div class="project-card-content">
+                        <ul>
+                            <li>Developed an interactive dashboard tracking budget vs. actual spend using SQL-backed star schema and DAX measures.</li>
+                            <li>Optimized Power Query transformations, improving data refresh efficiency by 20%.</li>
+                            <li>Visualized KPIs including Loss Ratio, Customer Retention, and Regional Risk Exposure.</li>
+                        </ul>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Simple animation for elements when they come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card, .project-card');
+            
+            // Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            // Set initial state and observe cards
+            cards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

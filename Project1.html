@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Model Comparison Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --gp-color: #e74c3c;
+            --mlp-color: #2ecc71;
+            --j48-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        
+        .models-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .model-section {
+            background: var(--light-color);
+            padding: 1rem;
+            border-radius: 8px;
+            height: 100%;
+        }
+        
+        .gp {
+            border-left: 4px solid var(--gp-color);
+        }
+        
+        .mlp {
+            border-left: 4px solid var(--mlp-color);
+        }
+        
+        .j48 {
+            border-left: 4px solid var(--j48-color);
+        }
+        
+        .model-title {
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+        }
+        
+        .gp-color {
+            color: var(--gp-color);
+        }
+        
+        .mlp-color {
+            color: var(--mlp-color);
+        }
+        
+        .j48-color {
+            color: var(--j48-color);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .gp-badge {
+            background-color: var(--gp-color);
+            color: white;
+        }
+        
+        .mlp-badge {
+            background-color: var(--mlp-color);
+            color: white;
+        }
+        
+        .j48-badge {
+            background-color: var(--j48-color);
+            color: white;
+        }
+        
+        .results-container {
+            overflow-x: auto;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .results-table th, .results-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .results-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .results-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: none;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .insight-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .insight-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .icon {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .comparison-charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .stat-test-results {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .model-param {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .models-info, .comparison-charts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ML Model Comparison: Stock Purchase Classification</h1>
+            <p class="subtitle">Genetic Programming vs. MLP vs. J48 Decision Tree</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title">Model Specifications</h2>
+            <div class="models-info">
+                <div class="model-section gp">
+                    <h3 class="model-title"><span class="badge gp-badge">GP</span> Genetic Programming</h3>
+                    <div class="model-param"><strong>Population Size:</strong> 200</div>
+                    <div class="model-param"><strong>Operators:</strong> Crossover (70%), Mutation (10%), Reproduction (20%)</div>
+                    <div class="model-param"><strong>Tree Constraints:</strong> Max 4 functions per tree</div>
+                    <div class="model-param"><strong>Termination:</strong> 1000 generations</div>
+                    <div class="model-param"><strong>Patterns:</strong> Factory, Interpreter</div>
+                    <div class="model-param"><strong>Preprocessing:</strong> Data normalized to [0, 1]</div>
+                </div>
+                <div class="model-section mlp">
+                    <h3 class="model-title"><span class="badge mlp-badge">MLP</span> Multi-Layer Perceptron</h3>
+                    <div class="model-param"><strong>Architecture:</strong> 10-5-1 (Input-Hidden-Output)</div>
+                    <div class="model-param"><strong>Activation:</strong> ReLU (Hidden), Sigmoid (Output)</div>
+                    <div class="model-param"><strong>Learning Rate:</strong> 0.1</div>
+                    <div class="model-param"><strong>Loss Function:</strong> Mean Squared Error</div>
+                    <div class="model-param"><strong>Batch Size:</strong> 32</div>
+                    <div class="model-param"><strong>Termination:</strong> 500 epochs</div>
+                </div>
+                <div class="model-section j48">
+                    <h3 class="model-title"><span class="badge j48-badge">J48</span> J48 Decision Tree</h3>
+                    <div class="model-param"><strong>Implementation:</strong> WEKA's J48 class</div>
+                    <div class="model-param"><strong>Pruning Confidence:</strong> 0.25</div>
+                    <div class="model-param"><strong>Min Instances per Leaf:</strong> 2</div>
+                    <div class="model-param"><strong>Splitting Criteria:</strong> Information Gain</div>
+                    <div class="model-param"><strong>Deterministic:</strong> Fixed structure across runs</div>
+                    <div class="model-param"><strong>Preprocessing:</strong> Class attribute to nominal type</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Experimental Results</h2>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('gp-results')">GP Results</div>
+                <div class="tab" onclick="switchTab('mlp-results')">MLP Results</div>
+                <div class="tab" onclick="switchTab('j48-results')">J48 Results</div>
+                <div class="tab" onclick="switchTab('comparison')">Performance Comparison</div>
+                <div class="tab" onclick="switchTab('stat-test')">Statistical Analysis</div>
+            </div>
+            
+            <div id="gp-results" class="tab-content active">
+                <h3>Genetic Programming Performance (10 Runs)</h3>
+                <div class="results-container">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Run</th>
+                                <th>Seed Value</th>
+                                <th>Train Accuracy</th>
+                                <th>Train F1</th>
+                                <th>Test Accuracy</th>
+                                <th>Test F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>1747858316747</td><td>47.90%</td><td>0.463</td><td>46.29%</td><td>0.350</td></tr>
+                            <tr><td>2</td><td>1747858343644</td><td>48.90%</td><td>0.338</td><td>51.10%</td><td>0.601</td></tr>
+                            <tr><td>3</td><td>1747858311763</td><td>52.30%</td><td>0.619</td><td>50.30%</td><td>0.000</td></tr>
+                            <tr><td>4</td><td>1747858326786</td><td>53.31%</td><td>0.655</td><td>53.31%</td><td>0.655</td></tr>
+                            <tr><td>5</td><td>1747858339692</td><td>51.10%</td><td>0.631</td><td>54.31%</td><td>0.686</td></tr>
+                            <tr><td>6</td><td>1747854008222</td><td>46.89%</td><td>0.349</td><td>47.49%</td><td>0.325</td></tr>
+                            <tr><td>7</td><td>1747858020581</td><td>50.70%</td><td>0.468</td><td>50.70%</td><td>0.468</td></tr>
+                            <tr><td>8</td><td>1747858320442</td><td>48.70%</td><td>0.000</td><td>48.70%</td><td>0.000</td></tr>
+                            <tr><td>9</td><td>1747858331039</td><td>45.29%</td><td>0.190</td><td>45.29%</td><td>0.190</td></tr>
+                            <tr><td>10</td><td>1747858335290</td><td>47.49%</td><td>0.288</td><td>47.49%</td><td>0.288</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="chart-container">
+                    <canvas id="gpChart"></canvas>
+                </div>
+            </div>
+            
+            <div id="mlp-results" class="tab-content">
+                <h3>Multi-Layer Perceptron Performance (10 Runs)</h3>
+                <div class="results-container">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Run</th>
+                                <th>Seed Value</th>
+                                <th>Train Accuracy</th>
+                                <th>Train F1</th>
+                                <th>Test Accuracy</th>
+                                <th>Test F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>1747858316747</td><td>87.37%</td><td>0.89</td><td>95.82%</td><td>0.96</td></tr>
+                            <tr><td>2</td><td>1747858343644</td><td>85.97%</td><td>0.88</td><td>94.68%</td><td>0.94</td></tr>
+                            <tr><td>3</td><td>1747858311763</td><td>86.07%</td><td>0.88</td><td>94.30%</td><td>0.94</td></tr>
+                            <tr><td>4</td><td>1747858326786</td><td>86.77%</td><td>0.89</td><td>94.30%</td><td>0.94</td></tr>
+                            <tr><td>5</td><td>1747858339692</td><td>87.07%</td><td>0.89</td><td>93.54%</td><td>0.93</td></tr>
+                            <tr><td>6</td><td>1747854008222</td><td>85.27%</td><td>0.88</td><td>93.16%</td><td>0.93</td></tr>
+                            <tr><td>7</td><td>1747858020581</td><td>85.27%</td><td>0.88</td><td>93.16%</td><td>0.93</td></tr>
+                            <tr><td>8</td><td>1747858320442</td><td>85.47%</td><td>0.88</td><td>93.16%</td><td>0.93</td></tr>
+                            <tr><td>9</td><td>1747858331039</td><td>84.77%</td><td>0.87</td><td>92.78%</td><td>0.92</td></tr>
+                            <tr><td>10</td><td>1747858335290</td><td>85.57%</td><td>0.88</td><td>93.54%</td><td>0.93</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="chart-container">
+                    <canvas id="mlpChart"></canvas>
+                </div>
+            </div>
+            
+            <div id="j48-results" class="tab-content">
+                <h3>J48 Decision Tree Performance (10 Runs)</h3>
+                <div class="results-container">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Run</th>
+                                <th>Seed Value</th>
+                                <th>Train Accuracy</th>
+                                <th>Train F1</th>
+                                <th>Test Accuracy</th>
+                                <th>Test F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>1747858316747</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>2</td><td>1747858343644</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>3</td><td>1747858311763</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>4</td><td>1747858326786</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>5</td><td>1747858339692</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>6</td><td>1747854008222</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>7</td><td>1747858020581</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>8</td><td>1747858320442</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>9</td><td>1747858331039</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                            <tr><td>10</td><td>1747858339692</td><td>52.91%</td><td>0.366</td><td>50.57%</td><td>0.33</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="chart-container">
+                    <canvas id="j48Chart"></canvas>
+                </div>
+            </div>
+            
+            <div id="comparison" class="tab-content">
+                <h3>Model Performance Comparison</h3>
+                <div class="comparison-charts">
+                    <div>
+                        <h4>Test Accuracy Comparison</h4>
+                        <div class="chart-container">
+                            <canvas id="accuracyChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Test F1 Score Comparison</h4>
+                        <div class="chart-container">
+                            <canvas id="f1Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4>Performance Distribution</h4>
+                    <div class="chart-container">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stat-test" class="tab-content">
+                <h3>Statistical Analysis: Wilcoxon Signed-Rank Test (GP vs. MLP)</h3>
+                <div class="stat-test-results">
+                    <p><strong>Hypotheses:</strong></p>
+                    <ul>
+                        <li>H₀: No performance difference between GP and MLP</li>
+                        <li>H₁: MLP outperforms GP</li>
+                    </ul>
+                    
+                    <p><strong>Test Results:</strong></p>
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Wilcoxon Statistic (W)</th>
+                                <th>p-value</th>
+                                <th>Conclusion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Test Accuracy</td>
+                                <td>0.000</td>
+                                <td>0.002</td>
+                                <td>Reject H₀ (MLP > GP, p < 0.05)</td>
+                            </tr>
+                            <tr>
+                                <td>Test F1 Score</td>
+                                <td>1.000</td>
+                                <td>0.003</td>
+                                <td>Reject H₀ (MLP > GP, p < 0.05)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <p><strong>Interpretation:</strong></p>
+                    <ul>
+                        <li>MLP achieves significantly higher test accuracy (93.2–95.8% vs. GP's 45.3–54.3%)</li>
+                        <li>MLP achieves significantly higher F1 scores (0.92–0.96 vs. GP's 0.00–0.69)</li>
+                        <li>J48's deterministic nature eliminates run-to-run variability, making statistical comparisons irrelevant</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Conclusion & Recommendations</h2>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">📊</span> J48 Decision Tree</h3>
+                    <p><strong>Strengths:</strong> Deterministic, interpretable</p>
+                    <p><strong>Weaknesses:</strong> Limited accuracy (~50%) due to linear splits</p>
+                    <p>Lack of performance variance across seeds is due to WEKA's deterministic tree-building process</p>
+                </div>
+                
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">🚀</span> MLP</h3>
+                    <p><strong>Best Performer:</strong> High test accuracy (up to 95.82%)</p>
+                    <p>Benefits from deep architecture and nonlinear activation</p>
+                    <p>Minimal overfitting (training vs. testing difference: ~8%)</p>
+                </div>
+                
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">⚠️</span> Genetic Programming</h3>
+                    <p><strong>Lowest Accuracy:</strong> Evolutionary strategy struggles with high-dimensional data</p>
+                    <p>Test accuracy range: ~45–54%</p>
+                    <p>High variability in performance across runs</p>
+                </div>
+                
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">✅</span> Recommendation</h3>
+                    <p>Use the MLP's predictions (1/0) to guide stock purchase strategies</p>
+                    <p>Prioritize its high test accuracy (93.2–95.8%) over the less reliable GP and J48 models</p>
+                    <p>MLP demonstrates both high performance and consistency across runs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // If charts tab is selected, render charts
+            if (tabId === 'comparison' || tabId === 'gp-results' || tabId === 'mlp-results' || tabId === 'j48-results') {
+                renderCharts();
+            }
+        }
+        
+        // Chart rendering function
+        function renderCharts() {
+            // Data for charts
+            const runs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            
+            // GP Data
+            const gpTrainAccuracy = [47.90, 48.90, 52.30, 53.31, 51.10, 46.89, 50.70, 48.70, 45.29, 47.49];
+            const gpTestAccuracy = [46.29, 51.10, 50.30, 53.31, 54.31, 47.49, 50.70, 48.70, 45.29, 47.49];
+            const gpTrainF1 = [0.463, 0.338, 0.619, 0.655, 0.631, 0.349, 0.468, 0.000, 0.190, 0.288];
+            const gpTestF1 = [0.350, 0.601, 0.000, 0.655, 0.686, 0.325, 0.468, 0.000, 0.190, 0.288];
+            
+            // MLP Data
+            const mlpTrainAccuracy = [87.37, 85.97, 86.07, 86.77, 87.07, 85.27, 85.27, 85.47, 84.77, 85.57];
+            const mlpTestAccuracy = [95.82, 94.68, 94.30, 94.30, 93.54, 93.16, 93.16, 93.16, 92.78, 93.54];
+            const mlpTrainF1 = [0.89, 0.88, 0.88, 0.89, 0.89, 0.88, 0.88, 0.88, 0.87, 0.88];
+            const mlpTestF1 = [0.96, 0.94, 0.94, 0.94, 0.93, 0.93, 0.93, 0.93, 0.92, 0.93];
+            
+            // J48 Data (all the same)
+            const j48TrainAccuracy = Array(10).fill(52.91);
+            const j48TestAccuracy = Array(10).fill(50.57);
+            const j48TrainF1 = Array(10).fill(0.366);
+            const j48TestF1 = Array(10).fill(0.33);
+            
+            // GP Chart
+            if (document.getElementById('gpChart')) {
+                const gpCtx = document.getElementById('gpChart').getContext('2d');
+                new Chart(gpCtx, {
+                    type: 'line',
+                    data: {
+                        labels: runs,
+                        datasets: [
+                            {
+                                label: 'Train Accuracy',
+                                data: gpTrainAccuracy,
+                                borderColor: '#3498db',
+                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Test Accuracy',
+                                data: gpTestAccuracy,
+                                borderColor: '#e74c3c',
+                                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Accuracy (%)'
+                                },
+                                min: 40,
+                                max: 60
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Run'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // MLP Chart
+            if (document.getElementById('mlpChart')) {
+                const mlpCtx = document.getElementById('mlpChart').getContext('2d');
+                new Chart(mlpCtx, {
+                    type: 'line',
+                    data: {
+                        labels: runs,
+                        datasets: [
+                            {
+                                label: 'Train Accuracy',
+                                data: mlpTrainAccuracy,
+                                borderColor: '#3498db',
+                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Test Accuracy',
+                                data: mlpTestAccuracy,
+                                borderColor: '#2ecc71',
+                                backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Accuracy (%)'
+                                },
+                                min: 80,
+                                max: 100
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Run'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // J48 Chart
+            if (document.getElementById('j48Chart')) {
+                const j48Ctx = document.getElementById('j48Chart').getContext('2d');
+                new Chart(j48Ctx, {
+                    type: 'line',
+                    data: {
+                        labels: runs,
+                        datasets: [
+                            {
+                                label: 'Train Accuracy',
+                                data: j48TrainAccuracy,
+                                borderColor: '#3498db',
+                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Test Accuracy',
+                                data: j48TestAccuracy,
+                                borderColor: '#f39c12',
+                                backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Accuracy (%)'
+                                },
+                                min: 49,
+                                max: 54
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Run'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Comparison Charts
+            if (document.getElementById('accuracyChart')) {
+                // Accuracy Comparison Chart
+                const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
+                new Chart(accuracyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['GP', 'MLP', 'J48'],
+                        datasets: [{
+                            label: 'Average Test Accuracy (%)',
+                            data: [
+                                gpTestAccuracy.reduce((a, b) => a + b, 0) / gpTestAccuracy.length,
+                                mlpTestAccuracy.reduce((a, b) => a + b, 0) / mlpTestAccuracy.length,
+                                j48TestAccuracy.reduce((a, b) => a + b, 0) / j48TestAccuracy.length
+                            ],
+                            backgroundColor: [
+                                'rgba(231, 76, 60, 0.7)',
+                                'rgba(46, 204, 113, 0.7)',
+                                'rgba(243, 156, 18, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgb(231, 76, 60)',
+                                'rgb(46, 204, 113)',
+                                'rgb(243, 156, 18)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Accuracy (%)'
+                                },
+                                max: 100
+                            }
+                        }
+                    }
+                });
+                
+                // F1 Comparison Chart
+                const f1Ctx = document.getElementById('f1Chart').getContext('2d');
+                new Chart(f1Ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['GP', 'MLP', 'J48'],
+                        datasets: [{
+                            label: 'Average Test F1 Score',
+                            data: [
+                                gpTestF1.reduce((a, b) => a + b, 0) / gpTestF1.length,
+                                mlpTestF1.reduce((a, b) => a + b, 0) / mlpTestF1.length,
+                                j48TestF1.reduce((a, b) => a + b, 0) / j48TestF1.length
+                            ],
+                            backgroundColor: [
+                                'rgba(231, 76, 60, 0.7)',
+                                'rgba(46, 204, 113, 0.7)',
+                                'rgba(243, 156, 18, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgb(231, 76, 60)',
+                                'rgb(46, 204, 113)',
+                                'rgb(243, 156, 18)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'F1 Score'
+                                },
+                                max: 1
+                            }
+                        }
+                    }
+                });
+                
+                // Distribution Chart
+                const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+                new Chart(distributionCtx, {
+                    type: 'boxplot',
+                    data: {
+                        labels: ['GP', 'MLP', 'J48'],
+                        datasets: [
+                            {
+                                label: 'Test Accuracy Distribution',
+                                backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                                borderColor: 'rgb(52, 152, 219)',
+                                borderWidth: 1,
+                                outlierColor: '#999999',
+                                padding: 10,
+                                itemRadius: 0,
+                                data: [
+                                    gpTestAccuracy,
+                                    mlpTestAccuracy,
+                                    j48TestAccuracy
+                                ]
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Test Accuracy (%)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Initial render
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCharts();
+        });
+    </script>
+</body>
+</html>

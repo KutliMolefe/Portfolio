@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOP ACO Results - Interactive Dashboard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        select, button {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        select:hover, button:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .route-visualization {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .node {
+            fill: #e74c3c;
+            stroke: #c0392b;
+            stroke-width: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .node:hover {
+            fill: #c0392b;
+            transform: scale(1.2);
+        }
+        .node-depot {
+            fill: #27ae60;
+            stroke: #229954;
+        }
+        .route-path {
+            fill: none;
+            stroke-width: 3px;
+            stroke-opacity: 0.7;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            pointer-events: none;
+            font-size: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .results-table th,
+        .results-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .results-table th {
+            background: #2c3e50;
+            color: white;
+        }
+        .results-table tr:hover {
+            background: #f5f5f5;
+        }
+        .vehicle-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: #667eea;
+            color: white;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+		.report-section {
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-button {
+            padding: 12px 20px;
+            background: #e9ecef;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab-button:hover {
+            background: #dee2e6;
+        }
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: white;
+            border-radius: 0 0 5px 5px;
+            line-height: 1.6;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .report-section h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .report-section h4 {
+            color: #495057;
+            margin-top: 20px;
+        }
+        .report-section ul, .report-section ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        .report-section li {
+            margin-bottom: 8px;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .param-table th, .param-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+        .param-table th {
+            background-color: #667eea;
+            color: white;
+        }
+        .param-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .reference {
+            font-style: italic;
+            color: #6c757d;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Team Orienteering Problem - ACO Results</h1>
+            <p>Interactive Visualization of Ant Colony Optimization Performance</p>
+        </div>
+
+        <div class="controls">
+            <select id="instance-select">
+                <option value="">Select Instance</option>
+            </select>
+            <select id="vehicle-select">
+                <option value="">Select Vehicle</option>
+            </select>
+            <button onclick="resetView()">Reset View</button>
+            <button onclick="exportData()">Export Data</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Score</div>
+                <div class="stat-number" id="total-score">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Duration</div>
+                <div class="stat-number" id="total-duration">0s</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Runtime</div>
+                <div class="stat-number" id="total-runtime">0ms</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Vehicles Used</div>
+                <div class="stat-number" id="vehicles-count">0</div>
+            </div>
+        </div>
+<!-- ACO Report Section -->
+        <div class="report-section">
+            <div class="report-header">
+                <h2>Ant Colony Optimization Problem</h2>
+                <p>Implementation details, experimental setup, results and critical analysis</p>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-button active" onclick="openTab(event, 'overview')">Overview</button>
+                <button class="tab-button" onclick="openTab(event, 'implementation')">Implementation</button>
+                <button class="tab-button" onclick="openTab(event, 'experimental')">Experimental Setup</button>
+                <button class="tab-button" onclick="openTab(event, 'analysis')">Critical Analysis</button>
+            </div>
+            
+            <div id="overview" class="tab-content active">
+                <h3>Overview</h3>
+                <p>This report is an implementation of Ant Colony Optimization to solve the team orienting problem alongside experimental setup, results and critical analysis.</p>
+            </div>
+            
+            <div id="implementation" class="tab-content">
+                <h3>Implementation and Design of Ant Colony Optimization Algorithm</h3>
+                
+                <h4>Pheromone Representation and Update Mechanisms</h4>
+                <p>When solving the team orienteering problem using the ant colony algorithm, pheromones are utilized to guide the construction of solutions. Each edge(i, j) connecting two nodes is assigned with a pheromone values denoted as 𝜏𝑖𝑗.</p>
+                
+                <p>At initialization, all the values of the pheromone are set to a fixed positive value: 𝜏𝑖𝑗 = 0.1. This initial value encouraged exploration during earlier iterations of the algorithm to prevent premature convergence of suboptimal paths.</p>
+                
+                <h5>Pheromone Matrix</h5>
+                <p>The matrix holds the levels of the pheromone for each edge, which is updated during the algorithms execution to help guide the ants towards better solutions.</p>
+                
+                <h5>Pheromone Update Mechanism</h5>
+                <p>The pheromone update mechanism consists of two main phases:</p>
+                <ol>
+                    <li><strong>Evaporation:</strong> To prevent premature convergence pheromone trails evaporate across all edges after each iteration. Using the formula: 𝜏𝑖𝑗 ← (1 − 𝜌) × 𝜏𝑖𝑗. Where ρ is the evaporation rate. Through evaporation after each iteration only a portion of the existing pheromone remains, this encourages ants to occasionally explore less explored paths rather than choosing the same routes.</li>
+                    <li><strong>Deposition:</strong> After evaporation is completed, pheromones are strengthened on the edges used in the best-performing routes. This focuses the search on high reward paths. The update rule is: 𝜏𝑖𝑗 ← 𝜏𝑖𝑗 + ∆𝜏𝑖𝑗.</li>
+                </ol>
+                
+                <h4>Ant Movement Rules and Route Construction Strategies</h4>
+                <p>Initialization begins by each ant starting vehicle routes from the depot (node 0).</p>
+                <p>Ants select the next node based on heuristic value calculated as 𝜂𝑖𝑗 = 𝑠𝑗 / 𝑐𝑖𝑗 where the reward associated with node j is 𝑠𝑗 and the distance cost between nodes j and i is 𝐶𝑖𝑗.</p>
+                
+                <p>The probability calculation is the probability of moving from node i to j is:</p>
+                <p style="text-align: center; font-style: italic;">𝑃𝑖𝑗 = (𝜏𝑖𝑗)<sup>𝛼</sup> × (𝜂𝑖𝑗)<sup>𝛽</sup> / ∑ (𝜏𝑖𝑘)<sup>𝛼</sup> × (𝜂𝑖𝑘)<sup>𝛽</sup> (for all k in N𝑖)</p>
+                
+                <p>Termination is when further moves without exceeding tmax do not exist, the ant will then return to the depot and the route stops.</p>
+                
+                <h5>Step by Step Process</h5>
+                <ul>
+                    <li><strong>Start at depot:</strong> all routes begin and end at the same depot</li>
+                    <li><strong>Feasible neighbours:</strong> for the current nodes the algorithm identifies unvisited nodes that can be reached without exceeding the time limit</li>
+                    <li><strong>Probability calculation:</strong> the ant will then pick the next node probabilistically. Nodes are likely chosen by having higher rewards and a closer distance</li>
+                    <li><strong>Constraints handling:</strong> each vehicle does not exceed the maximum travel distance according to Tmax. Each node is visited only once and all routes start and end at the depot.</li>
+                </ul>
+                
+                <h4>Constraint Handling Techniques to Ensure Feasible Solutions</h4>
+                <ul>
+                    <li><strong>Time Constraint (Tmax):</strong> the travel time/distance limit must not be exceeded by each vehicle route</li>
+                    <li><strong>Node Visitation:</strong> Each node can only be visited once per route, ensuring that the algorithm does not revisit nodes.</li>
+                    <li><strong>Depot Start/End:</strong> All routes must start and end at the depot (node 0)</li>
+                </ul>
+                
+                <h4>Parameters and Their Tuning Strategies</h4>
+                <table class="param-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Description</th>
+                        <th>Value</th>
+                        <th>Tuning Strategy</th>
+                    </tr>
+                    <tr>
+                        <td>Number of Ants</td>
+                        <td>The ant colony size using in the algorithm</td>
+                        <td>50</td>
+                        <td>The number of ants is increased for better exploration</td>
+                    </tr>
+                    <tr>
+                        <td>Pheromone Evaporation Rate (ρ)</td>
+                        <td>The rate at which the pheromone trails on the graph evaporate overtime</td>
+                        <td>0.1</td>
+                        <td>10% exploration rate was used to allow pheromones to decay slowly allowing more exploration</td>
+                    </tr>
+                    <tr>
+                        <td>Pheromone Influence (α)</td>
+                        <td>Controls the importance of pheromone trails</td>
+                        <td>1.0</td>
+                        <td>Allows the algorithm to give moderate importance to pheromone trails in guiding the ants decisions</td>
+                    </tr>
+                    <tr>
+                        <td>Heuristic Influence (β)</td>
+                        <td>Controls the importance of heuristic information</td>
+                        <td>2.0</td>
+                        <td>Giving more weight to the heuristic encourages ants to explore nodes that offer a higher reward for less travel cost</td>
+                    </tr>
+                    <tr>
+                        <td>Initial Pheromone (τ₀)</td>
+                        <td>The initial value assigned to all edges of the pheromone levels</td>
+                        <td>0.1</td>
+                        <td>A small starting value was chosen to promote extensive exploration early in the search</td>
+                    </tr>
+                    <tr>
+                        <td>Pheromone Deposits (Q)</td>
+                        <td>Constant value used to reward better solutions</td>
+                        <td>100.00</td>
+                        <td>The deposit amount was selected to reward better solutions appropriately</td>
+                    </tr>
+                    <tr>
+                        <td>Stopping Conditions (MAX_ITERATIONS)</td>
+                        <td>Maximum number of iterations</td>
+                        <td>Varies</td>
+                        <td>The set max iteration prevents an infinite loop in instances that do not converge</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="experimental" class="tab-content">
+                <h3>Experimental Setup</h3>
+                
+                <h4>Seed Value</h4>
+                <p>For each run different seed values were tested and the best is reported.</p>
+                
+                <h4>Input Data File</h4>
+                <p>TOP problem instances. Each instance specifies:</p>
+                <ul>
+                    <li>The total number of nodes including the depot.</li>
+                    <li>The rewards associated with each node</li>
+                    <li>The pair travel costs between nodes</li>
+                    <li>The maximum travel distance (Tmax) for each vehicle</li>
+                    <li>The number of available vehicles</li>
+                </ul>
+                
+                <h4>Setting Values of the Algorithm Parameters</h4>
+                <p>All parameters were set according to the tuning strategies described in the implementation section.</p>
+                
+                <h4>Termination Criteria</h4>
+                <p>Runs: 10 runs per problem instance and the best solution is reported.</p>
+            </div>
+            
+            <div id="analysis" class="tab-content">
+                <h3>Critical Analysis</h3>
+                
+                <h4>Findings</h4>
+                <p>Careful tuning strategy of α (pheromone importance), β (heuristic importance), ρ (evaporation rate) and number of ants is important for good performance.</p>
+                
+                <div class="highlight">
+                    <h4>Strengths of the Algorithm</h4>
+                    <ul>
+                        <li><strong>High Solution Quality:</strong> The ACO implementation was successfully able to find feasible and high quality routes while maximizing the total collected reward within the time constraints.</li>
+                        <li><strong>Constraint Compliance:</strong> The algorithm was also compliant with restraints where all routes adhered to (maximum distance) Tmax and visited nodes only ones and was able to start and end at the same depot.</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight">
+                    <h4>Limitations</h4>
+                    <ul>
+                        <li><strong>Parameter Sensitivity:</strong> The heuristic influence (β) and evaporation rate (ρ) made the performance highly sensitive to these values. Minor deviation from tuning strategy values would lead to premature convergence.</li>
+                        <li><strong>High Computational Cost:</strong> This was led by the need for multiple ants and many iterations to obtain satisfactory solutions.</li>
+                        <li><strong>Scalability Issues:</strong> An increase of computational effort was seen as the number of nodes and vehicles increased which increased the size of the solution space making it challenging for the algorithm to maintain solution quality.</li>
+                    </ul>
+                </div>
+                
+                <h4>Insights</h4>
+                <p>The implementation of the Ant Colony Optimization for the Team Orienteering Problem was able to balance dance and pheromone trails to prioritize high reward noted while adhering to the constraints.</p>
+                
+                <p>Another important insight is the balance between exploration and exploitation, and its ability to explore a broad set of possible solutions early while refining the best solution overtime using the pheromone update mechanism. Keeping this balance often involves a tuning strategy of parameters.</p>
+                
+                <p>An instance with fewer nodes like P3.2.a was able to find feasible and good quality solutions in a shorter amount of time, in contrast larger instances like P7.2.m or P7.4.q had more nodes which created more complex route combination, this made the problem space larger and challenging to explore. Therefore, larger instances created high computational cost and longer runtimes. (Liangjun Ke, 2008)</p>
+                
+                <div class="reference">
+                    <h4>References</h4>
+                    <p>Liangjun Ke, C. A. (2008). Ants can solve the team orienteering problem. 645-665.</p>
+                    <p>Notes, L. (n.d.). Artificial Intelligence COS314 - Metaheuristics and Computational Intelligence.</p>
+                </div>
+            </div>
+        </div>
+    
+        <div class="dashboard">
+            <div class="card">
+                <h3>Performance Overview</h3>
+                <canvas id="performance-chart" width="400" height="300"></canvas>
+            </div>
+            <div class="card">
+                <h3>Score Distribution</h3>
+                <canvas id="score-chart" width="400" height="300"></canvas>
+            </div>
+        </div>
+
+        
+
+        <div class="card">
+            <h3>Detailed Results</h3>
+            <div id="results-table"></div>
+        </div>
+    </div>
+
+    <script>
+        // Complete TOP data
+        const topData = [
+            {
+                instance: "p7.2.a",
+                seed: 1423545590,
+                vehicles: [
+                    { vehicle: "V1", path: "0->101->39->0", score: 14, duration: 8.94, runtime: 255 },
+                    { vehicle: "V2", path: "0->29->0", score: 16, duration: 10.00, runtime: 177 }
+                ],
+                total: { score: 30, duration: 18.94, runtime: 479 }
+            },
+            {
+                instance: "p7.2.m", 
+                seed: 1423546688,
+                vehicles: [
+                    { vehicle: "V1", path: "0->101->29->30->28->20->50->51->9->93->40->16->4->2->27->91->49->48->26->75->41->39->0", score: 355, duration: 128.92, runtime: 1958 },
+                    { vehicle: "V2", path: "0->21->14->57->13->59->60->22->36->12->23->42->11->56->8->100->1->54->24->55->63->0", score: 397, duration: 127.25, runtime: 1031 }
+                ],
+                total: { score: 752, duration: 256.17, runtime: 3115 }
+            },
+            {
+                instance: "p7.3.h",
+                seed: 1423543334,
+                vehicles: [
+                    { vehicle: "V1", path: "0->101->29->30->50->51->9->20->0", score: 114, duration: 52.48, runtime: 1051 },
+                    { vehicle: "V2", path: "0->14->57->8->56->11->99->74->59->21->0", score: 191, duration: 52.29, runtime: 365 },
+                    { vehicle: "V3", path: "0->39->41->75->26->48->90->28->0", score: 103, duration: 52.62, runtime: 260 }
+                ],
+                total: { score: 408, duration: 157.39, runtime: 1693 }
+            },
+            {
+                instance: "p7.4.g",
+                seed: 1423542256,
+                vehicles: [
+                    { vehicle: "V1", path: "0->101->39->41->75->21->0", score: 64, duration: 34.87, runtime: 1177 },
+                    { vehicle: "V2", path: "0->28->20->30->0", score: 52, duration: 33.80, runtime: 28 },
+                    { vehicle: "V3", path: "0->29->81->55->0", score: 40, duration: 30.61, runtime: 203 },
+                    { vehicle: "V4", path: "0->14->57->58->63->0", score: 61, duration: 34.87, runtime: 123 }
+                ],
+                total: { score: 217, duration: 134.15, runtime: 1539 }
+            },
+            {
+                instance: "p7.4.q",
+                seed: 1423541178,
+                vehicles: [
+                    { vehicle: "V1", path: "0->101->39->41->21->14->57->8->56->11->99->74->60->23->42->1->100->58->63->0", score: 309, duration: 84.01, runtime: 1842 },
+                    { vehicle: "V2", path: "0->75->26->48->90->91->27->49->2->83->28->0", score: 150, duration: 84.29, runtime: 1257 },
+                    { vehicle: "V3", path: "0->29->30->20->9->93->51->15->52->10->33->38->50->0", score: 206, duration: 81.28, runtime: 791 },
+                    { vehicle: "V4", path: "0->3->95->43->25->5->6->53->24->55->0", score: 178, duration: 83.27, runtime: 403 }
+                ],
+                total: { score: 843, duration: 332.85, runtime: 4342 }
+            },
+            {
+                instance: "p3.2.a",
+                seed: 1423541990,
+                vehicles: [
+                    { vehicle: "V1", path: "0->21->26->22->0", score: 70, duration: 7.30, runtime: 129 },
+                    { vehicle: "V2", path: "0->23->24->0", score: 20, duration: 7.43, runtime: 402 }
+                ],
+                total: { score: 90, duration: 14.73, runtime: 533 }
+            },
+            {
+                instance: "p3.2.c",
+                seed: 1423542812,
+                vehicles: [
+                    { vehicle: "V1", path: "0->23->13->3->27->26->22->0", score: 90, duration: 11.95, runtime: 1210 },
+                    { vehicle: "V2", path: "0->21->6->4->32->0", score: 90, duration: 11.47, runtime: 10 }
+                ],
+                total: { score: 180, duration: 23.42, runtime: 1220 }
+            },
+            {
+                instance: "p3.3.a",
+                seed: 1423546612,
+                vehicles: [
+                    { vehicle: "V1", path: "0->21->23->0", score: 60, duration: 4.51, runtime: 24 },
+                    { vehicle: "V2", path: "0->22->26->0", score: 20, duration: 4.55, runtime: 14 },
+                    { vehicle: "V3", path: "0->32->0", score: 0, duration: 1.90, runtime: 18 }
+                ],
+                total: { score: 80, duration: 10.96, runtime: 65 }
+            },
+            {
+                instance: "p3.3.c",
+                seed: 1423547734,
+                vehicles: [
+                    { vehicle: "V1", path: "0->21->6->23->0", score: 80, duration: 8.25, runtime: 33 },
+                    { vehicle: "V2", path: "0->26->13->0", score: 40, duration: 8.05, runtime: 15 },
+                    { vehicle: "V3", path: "0->22->31->32->0", score: 20, duration: 7.76, runtime: 24 }
+                ],
+                total: { score: 140, duration: 24.06, runtime: 78 }
+            },
+            {
+                instance: "p3.4.s",
+                seed: 1423549956,
+                vehicles: [
+                    { vehicle: "V1", path: "0->21->6->4->13->3->19->16->27->26->23->0", score: 260, duration: 26.19, runtime: 224 },
+                    { vehicle: "V2", path: "0->22->2->12->14->5->1->31->32->0", score: 150, duration: 25.14, runtime: 99 },
+                    { vehicle: "V3", path: "0->25->28->29->9->8->24->0", score: 120, duration: 25.90, runtime: 37 },
+                    { vehicle: "V4", path: "0->10->11->7->0", score: 80, duration: 25.93, runtime: 19 }
+                ],
+                total: { score: 610, duration: 103.17, runtime: 379 }
+            },
+            {
+                instance: "p3.4.t",
+                seed: 1423548878,
+                vehicles: [
+                    { vehicle: "V1", path: "0->23->21->6->4->13->27->3->19->16->26->22->0", score: 270, duration: 27.48, runtime: 340 },
+                    { vehicle: "V2", path: "0->14->15->12->2->32->0", score: 130, duration: 27.20, runtime: 95 },
+                    { vehicle: "V3", path: "0->24->8->9->10->29->0", score: 120, duration: 26.73, runtime: 908 },
+                    { vehicle: "V4", path: "0->5->1->7->30->11->28->25->31->0", score: 150, duration: 26.96, runtime: 36 }
+                ],
+                total: { score: 670, duration: 108.37, runtime: 1393 }
+            }
+        ];
+
+        let currentSimulation = null;
+        let performanceChart = null;
+        let scoreChart = null;
+
+        // Initialize the dashboard
+        function initDashboard() {
+            populateInstanceSelect();
+            createPerformanceChart();
+            createScoreChart();
+            updateStats();
+            createResultsTable();
+        }
+
+        function populateInstanceSelect() {
+            const select = document.getElementById('instance-select');
+            topData.forEach(instance => {
+                const option = document.createElement('option');
+                option.value = instance.instance;
+                option.textContent = instance.instance;
+                select.appendChild(option);
+            });
+            
+            select.addEventListener('change', function() {
+                const selectedInstance = this.value;
+                if (selectedInstance) {
+                    updateVehicleSelect(selectedInstance);
+                    updateCharts(selectedInstance);
+                    visualizeRoutes(selectedInstance);
+                    updateSelectedInfo(selectedInstance);
+                }
+            });
+        }
+
+        function updateVehicleSelect(instanceName) {
+            const select = document.getElementById('vehicle-select');
+            select.innerHTML = '<option value="">All Vehicles</option>';
+            
+            const instance = topData.find(i => i.instance === instanceName);
+            instance.vehicles.forEach(vehicle => {
+                const option = document.createElement('option');
+                option.value = vehicle.vehicle;
+                option.textContent = vehicle.vehicle;
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', function() {
+                const selectedVehicle = this.value;
+                if (selectedVehicle) {
+                    highlightVehicle(selectedVehicle);
+                }
+            });
+        }
+
+        function createPerformanceChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+            performanceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: topData.map(d => d.instance),
+                    datasets: [{
+                        label: 'Total Score',
+                        data: topData.map(d => d.total.score),
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Performance Across All Instances',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Score'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createScoreChart() {
+            const ctx = document.getElementById('score-chart').getContext('2d');
+            scoreChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Score', 'Remaining'],
+                    datasets: [{
+                        data: [topData.reduce((sum, d) => sum + d.total.score, 0), 1000],
+                        backgroundColor: ['rgba(75, 192, 192, 0.8)', 'rgba(200, 200, 200, 0.3)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Overall Score Distribution',
+                            font: { size: 16 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function visualizeRoutes(instanceName) {
+            const instance = topData.find(i => i.instance === instanceName);
+            const svg = d3.select('#route-svg');
+            svg.html(''); // Clear previous visualization
+
+            // Create tooltip
+            const tooltip = d3.select('body').append('div')
+                .attr('class', 'tooltip')
+                .style('opacity', 0);
+
+            // Create nodes and links
+            const nodes = [];
+            const links = [];
+            const nodeMap = new Map();
+            
+            instance.vehicles.forEach((vehicle, vehicleIndex) => {
+                const pathNodes = vehicle.path.split('->').map(Number);
+                const color = d3.schemeCategory10[vehicleIndex];
+                
+                pathNodes.forEach((nodeId, index) => {
+                    if (!nodeMap.has(nodeId)) {
+                        const node = {
+                            id: nodeId,
+                            label: nodeId === 0 ? 'Depot' : `Node ${nodeId}`,
+                            isDepot: nodeId === 0,
+                            x: Math.random() * 600 + 100,
+                            y: Math.random() * 400 + 50
+                        };
+                        nodes.push(node);
+                        nodeMap.set(nodeId, node);
+                    }
+                    
+                    if (index > 0) {
+                        links.push({
+                            source: nodeMap.get(pathNodes[index - 1]),
+                            target: nodeMap.get(nodeId),
+                            vehicle: vehicle.vehicle,
+                            color: color
+                        });
+                    }
+                });
+            });
+
+            // Create simulation
+            if (currentSimulation) {
+                currentSimulation.stop();
+            }
+
+            currentSimulation = d3.forceSimulation(nodes)
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(400, 250))
+                .force('link', d3.forceLink(links).id(d => d.id).distance(100))
+                .alphaTarget(0.3)
+                .restart();
+
+            // Draw links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .enter().append('line')
+                .attr('class', 'route-path')
+                .attr('stroke', d => d.color)
+                .attr('stroke-width', 3)
+                .attr('stroke-opacity', 0.6);
+
+            // Draw nodes
+            const node = svg.append('g')
+                .selectAll('circle')
+                .data(nodes)
+                .enter().append('circle')
+                .attr('class', d => d.isDepot ? 'node node-depot' : 'node')
+                .attr('r', d => d.isDepot ? 12 : 8)
+                .attr('fill', d => d.isDepot ? '#27ae60' : '#e74c3c')
+                .on('mouseover', function(event, d) {
+                    tooltip.style('opacity', 1)
+                        .html(`<strong>${d.label}</strong><br>ID: ${d.id}`)
+                        .style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 25) + 'px');
+                })
+                .on('mouseout', function() {
+                    tooltip.style('opacity', 0);
+                });
+
+            // Update positions on each tick
+            currentSimulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                
+                node
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y);
+            });
+        }
+
+        function highlightVehicle(vehicleId) {
+            const svg = d3.select('#route-svg');
+            svg.selectAll('.route-path')
+                .attr('stroke-opacity', d => d.vehicle === vehicleId ? 1 : 0.2)
+                .attr('stroke-width', d => d.vehicle === vehicleId ? 4 : 2);
+        }
+
+        function updateSelectedInfo(instanceName) {
+            document.getElementById('selected-instance').textContent = instanceName;
+            document.getElementById('selected-vehicle-info').innerHTML = '';
+        }
+
+        function updateStats() {
+            const totalScore = topData.reduce((sum, instance) => sum + instance.total.score, 0);
+            const totalDuration = topData.reduce((sum, instance) => sum + instance.total.duration, 0);
+            const totalRuntime = topData.reduce((sum, instance) => sum + instance.total.runtime, 0);
+            const totalVehicles = topData.reduce((sum, instance) => sum + instance.vehicles.length, 0);
+            
+            document.getElementById('total-score').textContent = totalScore.toLocaleString();
+            document.getElementById('total-duration').textContent = totalDuration.toFixed(2) + 's';
+            document.getElementById('total-runtime').textContent = totalRuntime.toLocaleString() + 'ms';
+            document.getElementById('vehicles-count').textContent = totalVehicles;
+        }
+
+        function createResultsTable() {
+            const tableContainer = document.getElementById('results-table');
+            let tableHTML = `
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Instance</th>
+                            <th>Vehicle</th>
+                            <th>Score</th>
+                            <th>Duration</th>
+                            <th>Runtime</th>
+                            <th>Path</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            topData.forEach(instance => {
+                instance.vehicles.forEach(vehicle => {
+                    tableHTML += `
+                        <tr>
+                            <td>${instance.instance}</td>
+                            <td><span class="vehicle-badge">${vehicle.vehicle}</span></td>
+                            <td>${vehicle.score}</td>
+                            <td>${vehicle.duration.toFixed(2)}s</td>
+                            <td>${vehicle.runtime}ms</td>
+                            <td>${vehicle.path}</td>
+                        </tr>
+                    `;
+                });
+            });
+
+            tableHTML += '</tbody></table>';
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        function resetView() {
+            document.getElementById('instance-select').value = '';
+            document.getElementById('vehicle-select').innerHTML = '<option value="">All Vehicles</option>';
+            d3.select('#route-svg').html('');
+            document.getElementById('selected-instance').textContent = 'None';
+            document.getElementById('selected-vehicle-info').innerHTML = '';
+            
+            // Reset charts to show all data
+            if (performanceChart) {
+                performanceChart.data.datasets[0].data = topData.map(d => d.total.score);
+                performanceChart.update();
+            }
+        }
+
+        function exportData() {
+            const csv = 'Instance,Seed,Vehicle,Path,Score,Duration,Runtime\n' +
+                topData.flatMap(instance => 
+                    instance.vehicles.map(vehicle => 
+                        `${instance.instance},${instance.seed},${vehicle.vehicle},"${vehicle.path}",${vehicle.score},${vehicle.duration},${vehicle.runtime}`
+                    )
+                ).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'top_results_export.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize the dashboard when the page loads
+        window.addEventListener('DOMContentLoaded', initDashboard);
+		function openTab(evt, tabName) {
+    // Hide all tab contents
+    const tabContents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove("active");
+    }
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.getElementsByClassName("tab-button");
+    for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove("active");
+    }
+    
+    // Show the specific tab content and add active class to the button
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+}
+
+// Add event listeners to tab buttons when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const tabName = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+            openTab(e, tabName);
+        });
+    });
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Algorithm Comparison</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent1-color: #e74c3c;
+            --accent2-color: #2ecc71;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        
+        .algorithm-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .algorithm-section {
+            background: var(--light-color);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .ts {
+            border-left: 4px solid var(--accent1-color);
+        }
+        
+        .sa {
+            border-left: 4px solid var(--accent2-color);
+        }
+        
+        .algorithm-title {
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+        }
+        
+        .ts-color {
+            color: var(--accent1-color);
+        }
+        
+        .sa-color {
+            color: var(--accent2-color);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .ts-badge {
+            background-color: var(--accent1-color);
+            color: white;
+        }
+        
+        .sa-badge {
+            background-color: var(--accent2-color);
+            color: white;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .results-table th, .results-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .results-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .results-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: none;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .insight-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .insight-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .icon {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .comparison-charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .algorithm-info, .comparison-charts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Performance Comparison: Tabu Search vs. Simulated Annealing</h1>
+            <p class="subtitle">Solving the Traveling Salesman Problem</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title">Algorithm Details</h2>
+            <div class="algorithm-info">
+                <div class="algorithm-section ts">
+                    <h3 class="algorithm-title"><span class="badge ts-badge">TS</span> Tabu Search</h3>
+                    <p><strong>Initial Solution:</strong> Random arrangement with fixed start/end city</p>
+                    <p><strong>Perturbation:</strong> Swap two cities, maintain Tabu list</p>
+                    <p><strong>Neighborhood:</strong> Solutions obtained by swapping two cities</p>
+                    <p><strong>Acceptance:</strong> Accept solutions not in Tabu list or with better cost</p>
+                    <p><strong>Stopping Criteria:</strong> 1000 iterations</p>
+                    <p><strong>Parameters:</strong> Tabu tenure = 10</p>
+                </div>
+                <div class="algorithm-section sa">
+                    <h3 class="algorithm-title"><span class="badge sa-badge">SA</span> Simulated Annealing</h3>
+                    <p><strong>Initial Solution:</strong> Random arrangement with fixed start/end city</p>
+                    <p><strong>Perturbation:</strong> Randomly swap two cities</p>
+                    <p><strong>Neighborhood:</strong> All possible small arrangements by swapping</p>
+                    <p><strong>Acceptance:</strong> Probabilistic based on cost difference and temperature</p>
+                    <p><strong>Stopping Criteria:</strong> Temperature &lt; 1 or 1000 iterations</p>
+                    <p><strong>Parameters:</strong> Initial temp = 1000, Cooling rate = 0.995</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Experimental Results</h2>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('table-tab')">Data Table</div>
+                <div class="tab" onclick="switchTab('charts-tab')">Visualizations</div>
+            </div>
+            
+            <div id="table-tab" class="tab-content active">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Problem Instance</th>
+                            <th>Algorithm</th>
+                            <th>Seed Value</th>
+                            <th>Cost</th>
+                            <th>Best Solution</th>
+                            <th>Runtime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2">8 Cities</td>
+                            <td>Tabu Search</td>
+                            <td>152736</td>
+                            <td>286.50</td>
+                            <td>[3, 0, 2, 6, 4, 1, 5, 7]</td>
+                            <td>55ms</td>
+                        </tr>
+                        <tr>
+                            <td>Simulated Annealing</td>
+                            <td>152839</td>
+                            <td>286.50</td>
+                            <td>[1, 5, 7, 3, 0, 2, 6, 4]</td>
+                            <td>11ms</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">12 Cities</td>
+                            <td>Tabu Search</td>
+                            <td>152283</td>
+                            <td>351.33</td>
+                            <td>[6, 2, 4, 0, 11, 5, 10, 7, 1, 9, 3, 8]</td>
+                            <td>7ms</td>
+                        </tr>
+                        <tr>
+                            <td>Simulated Annealing</td>
+                            <td>152183</td>
+                            <td>351.33</td>
+                            <td>[9, 1, 7, 10, 5, 11, 0, 4, 2, 6, 8, 3]</td>
+                            <td>0ms</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">15 Cities</td>
+                            <td>Tabu Search</td>
+                            <td>152902</td>
+                            <td>386.99</td>
+                            <td>[9, 11, 4, 7, 1, 5, 14, 12, 3, 10, 13, 8, 0, 6, 2]</td>
+                            <td>3ms</td>
+                        </tr>
+                        <tr>
+                            <td>Simulated Annealing</td>
+                            <td>152258</td>
+                            <td>401.98</td>
+                            <td>[11, 9, 2, 6, 0, 13, 10, 3, 8, 12, 14, 5, 7, 1, 4]</td>
+                            <td>1ms</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">20 Cities</td>
+                            <td>Tabu Search</td>
+                            <td>152883</td>
+                            <td>404.15</td>
+                            <td>[14, 17, 5, 0, 8, 15, 18, 9, 11, 2, 13, 7, 6, 16, 1, 4, 19, 12, 10, 3]</td>
+                            <td>7ms</td>
+                        </tr>
+                        <tr>
+                            <td>Simulated Annealing</td>
+                            <td>152419</td>
+                            <td>442.74</td>
+                            <td>[0, 8, 15, 2, 13, 7, 11, 9, 5, 17, 14, 3, 10, 12, 19, 4, 6, 16, 1, 18]</td>
+                            <td>0ms</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">25 Cities</td>
+                            <td>Tabu Search</td>
+                            <td>152345</td>
+                            <td>444.70</td>
+                            <td>[23, 2, 11, 6, 8, 4, 18, 21, 16, 1, 12, 14, 17, 5, 22, 9, 19, 24, 3, 7, 10, 13, 15, 20, 0]</td>
+                            <td>3ms</td>
+                        </tr>
+                        <tr>
+                            <td>Simulated Annealing</td>
+                            <td>152093</td>
+                            <td>555.50</td>
+                            <td>[17, 1, 21, 16, 18, 4, 8, 6, 2, 11, 23, 13, 24, 19, 12, 14, 9, 5, 3, 15, 20, 0, 10, 7, 22]</td>
+                            <td>2ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="charts-tab" class="tab-content">
+                <div class="comparison-charts">
+                    <div>
+                        <h3>Cost Comparison</h3>
+                        <div class="chart-container">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Runtime Comparison</h3>
+                        <div class="chart-container">
+                            <canvas id="runtimeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Performance Trends</h3>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Results Analysis & Insights</h2>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">📊</span> Cost Efficiency</h3>
+                    <p>Tabu Search consistently produces lower cost solutions compared to Simulated Annealing, especially as problem size increases.</p>
+                    <p>This is due to its ability to escape local optima using the Tabu list mechanism.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">⏱️</span> Runtime Performance</h3>
+                    <p>Simulated Annealing demonstrates faster execution times across all problem instances.</p>
+                    <p>The simpler acceptance criterion and lack of additional data structures contribute to its speed advantage.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">📈</span> Scalability</h3>
+                    <p>Tabu Search maintains solution quality as problem size increases, while Simulated Annealing's performance declines.</p>
+                    <p>This indicates Tabu Search is better suited for larger TSP instances.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <h3 class="insight-title"><span class="icon">⚖️</span> Trade-offs</h3>
+                    <p>Tabu Search provides better solutions at the cost of slightly higher runtime.</p>
+                    <p>Simulated Annealing is preferable when computational time is critical and problem size is small.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // If charts tab is selected, render charts
+            if (tabId === 'charts-tab') {
+                renderCharts();
+            }
+        }
+        
+        // Chart rendering function
+        function renderCharts() {
+            // Data for charts
+            const problemSizes = ['8 Cities', '12 Cities', '15 Cities', '20 Cities', '25 Cities'];
+            const tsCosts = [286.50, 351.33, 386.99, 404.15, 444.70];
+            const saCosts = [286.50, 351.33, 401.98, 442.74, 555.50];
+            const tsRuntimes = [55, 7, 3, 7, 3];
+            const saRuntimes = [11, 0, 1, 0, 2];
+            
+            // Cost Comparison Chart
+            const costCtx = document.getElementById('costChart').getContext('2d');
+            new Chart(costCtx, {
+                type: 'bar',
+                data: {
+                    labels: problemSizes,
+                    datasets: [
+                        {
+                            label: 'Tabu Search',
+                            data: tsCosts,
+                            backgroundColor: '#e74c3c',
+                            borderColor: '#c0392b',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Simulated Annealing',
+                            data: saCosts,
+                            backgroundColor: '#2ecc71',
+                            borderColor: '#27ae60',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Cost'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Runtime Comparison Chart
+            const runtimeCtx = document.getElementById('runtimeChart').getContext('2d');
+            new Chart(runtimeCtx, {
+                type: 'bar',
+                data: {
+                    labels: problemSizes,
+                    datasets: [
+                        {
+                            label: 'Tabu Search',
+                            data: tsRuntimes,
+                            backgroundColor: '#e74c3c',
+                            borderColor: '#c0392b',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Simulated Annealing',
+                            data: saRuntimes,
+                            backgroundColor: '#2ecc71',
+                            borderColor: '#27ae60',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Runtime (ms)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Trend Chart (Line chart showing performance as problem size increases)
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: problemSizes,
+                    datasets: [
+                        {
+                            label: 'Tabu Search Cost',
+                            data: tsCosts,
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Simulated Annealing Cost',
+                            data: saCosts,
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Cost'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
