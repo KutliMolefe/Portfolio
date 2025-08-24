@@ -32,146 +32,126 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
         }
         
         header {
-            padding: 60px 0 40px;
+            padding: 30px 0 15px;
             text-align: center;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 40px;
+            margin-bottom: 25px;
         }
         
         h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
+            font-size: 2.3rem;
+            margin-bottom: 5px;
             color: var(--text);
             font-weight: 700;
         }
         
         h2 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-weight: 400;
         }
         
         .title {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: var(--accent);
-            margin-bottom: 30px;
-            letter-spacing: 2px;
+            margin-bottom: 15px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
         }
         
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin: 40px 0;
+        .compact-contact {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
         }
         
-        .card {
-            background: var(--secondary);
-            border-radius: 12px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
-            box-shadow: var(--card-shadow);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--card-hover-shadow);
-        }
-        
-        .card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: var(--accent);
+        .compact-contact-item {
             display: flex;
             align-items: center;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .card h3 i {
-            margin-right: 10px;
-        }
-        
-        .skill-list {
-            list-style: none;
-        }
-        
-        .skill-list li {
-            margin-bottom: 12px;
-            padding-left: 25px;
-            position: relative;
             color: var(--text-secondary);
+            transition: color 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
         
-        .skill-list li::before {
-            content: "▹";
-            position: absolute;
-            left: 0;
+        .compact-contact-item:hover {
             color: var(--accent);
+        }
+        
+        .compact-contact-item i {
+            margin-right: 6px;
+            font-size: 1rem;
         }
         
         .profile-summary {
             max-width: 800px;
-            margin: 50px auto;
+            margin: 30px auto;
             text-align: center;
-            padding: 30px;
+            padding: 20px;
             background: var(--secondary);
             border-radius: 12px;
             border: 1px solid var(--border);
         }
         
         .profile-summary p {
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.7;
             color: var(--text-secondary);
         }
         
-        .contact-info {
+        /* Filter Buttons */
+        .filter-buttons {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 30px;
-            margin: 40px 0;
+            gap: 10px;
+            margin: 30px 0;
         }
         
-        .contact-item {
-            display: flex;
-            align-items: center;
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            transition: color 0.3s ease;
-            text-decoration: none;
         }
         
-        .contact-item:hover {
-            color: var(--accent);
+        .filter-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
         }
         
-        .contact-item i {
-            margin-right: 10px;
-            font-size: 1.2rem;
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
         }
         
         /* Project Cards Section */
         .projects-section {
-            margin: 60px 0;
+            margin: 30px 0 50px;
         }
         
         .section-title {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             color: var(--text);
-            font-size: 2rem;
+            font-size: 1.8rem;
             position: relative;
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
         
         .section-title::after {
@@ -180,15 +160,15 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
+            width: 50px;
             height: 3px;
             background: var(--accent);
         }
         
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
         
         .project-card {
@@ -204,6 +184,12 @@
             flex-direction: column;
             text-decoration: none;
             color: inherit;
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .project-card.hidden {
+            display: none;
         }
         
         .project-card:hover {
@@ -211,60 +197,53 @@
             box-shadow: var(--card-hover-shadow);
         }
         
+        .project-image {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+        
         .project-card-header {
-            padding: 20px;
+            padding: 15px;
             background: var(--accent);
             color: white;
         }
         
         .project-card-header h3 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-bottom: 5px;
         }
         
         .project-card-tools {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             opacity: 0.9;
         }
         
-        .project-card-content {
-            padding: 20px;
-            flex-grow: 1;
-        }
-        
-        .project-card-content ul {
-            list-style: none;
-            margin-bottom: 20px;
-        }
-        
-        .project-card-content li {
-            margin-bottom: 10px;
-            padding-left: 20px;
-            position: relative;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-        
-        .project-card-content li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-        }
-        
         .project-card-footer {
-            padding: 15px 20px;
+            padding: 12px 15px;
             border-top: 1px solid var(--border);
             text-align: center;
+            background: white;
         }
         
         .view-project-btn {
             background: transparent;
             border: 1px solid var(--accent);
             color: var(--accent);
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -276,21 +255,76 @@
             color: white;
         }
         
-        @media (max-width: 768px) {
+        /* Placeholder for images */
+        .image-placeholder {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .powerbi-bg {
+            background: linear-gradient(135deg, #4f46e5, #2563eb);
+        }
+        
+        .excel-bg {
+            background: linear-gradient(135deg, #107c41, #33bb6e);
+        }
+        
+        .python-bg {
+            background: linear-gradient(135deg, #306998, #ffd43b);
+        }
+        
+        .java-bg {
+            background: linear-gradient(135deg, #5382a1, #f89820);
+        }
+        
+        .sql-bg {
+            background: linear-gradient(135deg, #336791, #ffd700);
+        }
+        
+        @media (max-width: 1200px) {
+            .projects-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
             h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             
             h2 {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
             
-            .grid {
-                grid-template-columns: 1fr;
+            header {
+                padding: 25px 0 10px;
             }
             
-            .projects-grid {
-                grid-template-columns: 1fr;
+            .compact-contact {
+                gap: 12px;
+            }
+            
+            .filter-buttons {
+                gap: 8px;
+            }
+            
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -301,22 +335,21 @@
             <div class="header-content">
                 <h1>KUTLOANO MOLEFE</h1>
                 <div class="title">Data Scientist & AI Specialist</div>
-                <h2>Bachelor of Science in Computer Science</h2>
                 
-                <div class="contact-info">
-                    <a href="#" class="contact-item">
+                <div class="compact-contact">
+                    <a href="#" class="compact-contact-item">
                         <i class="fas fa-envelope"></i>
                         <span>Email</span>
                     </a>
-                    <a href="#" class="contact-item">
+                    <a href="#" class="compact-contact-item">
                         <i class="fas fa-phone"></i>
                         <span>Phone</span>
                     </a>
-                    <a href="#" class="contact-item">
+                    <a href="#" class="compact-contact-item">
                         <i class="fab fa-linkedin"></i>
                         <span>LinkedIn</span>
                     </a>
-                    <a href="#" class="contact-item">
+                    <a href="#" class="compact-contact-item">
                         <i class="fab fa-github"></i>
                         <span>GitHub</span>
                     </a>
@@ -329,152 +362,207 @@
             <p>A results-driven and quantitatively-focused graduate with a passion for applying advanced machine learning, statistical modelling, and data engineering to solve complex problems. Proven project experience in developing end-to-end data pipelines (ETL), building predictive models, and creating insightful dashboards for strategic decision-making. Possessing a strong foundation in actuarial and statistical principles, complemented by hands-on technical proficiency in Python, SQL, Java, Power BI, and advanced MS Excel.</p>
         </section>
         
-        <div class="grid">
-            <div class="card">
-                <h3><i class="fas fa-graduation-cap"></i> EDUCATION</h3>
-                <ul class="skill-list">
-                    <li><strong>Bachelor of Science in Computer Science</strong><br>Eduvos | 2022-2024<br>Average: 73%</li>
-                    <li><strong>Computer Science Program</strong><br>University of Pretoria | Feb 2025 – Jun 2025</li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-book"></i> RELEVANT COURSEWORK</h3>
-                <ul class="skill-list">
-                    <li>Mathematics 1A and 1B (Calculus)</li>
-                    <li>Statistical Modelling (Regression, Hypothesis Testing, Classification, Optimization)</li>
-                    <li>Database Systems (SQL Optimization, Star Schemas)</li>
-                    <li>Data Analytics (Time-Series, Clustering)</li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-brain"></i> AI/ML SPECIALTIES</h3>
-                <ul class="skill-list">
-                    <li>Genetic Algorithms</li>
-                    <li>Neural Networks</li>
-                    <li>Statistical Testing (Wilcoxon)</li>
-                    <li>Optimization (ACO, Tabu Search)</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="grid">
-            <div class="card">
-                <h3><i class="fas fa-chart-bar"></i> DATA VISUALIZATION</h3>
-                <ul class="skill-list">
-                    <li>Power BI (DAX, Power Query)</li>
-                    <li>SQL (data modeling, querying, star schema)</li>
-                    <li>Excel (including Power Query)</li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-code"></i> PROGRAMMING</h3>
-                <ul class="skill-list">
-                    <li>Java</li>
-                    <li>Python</li>
-                    <li>SQL</li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-tools"></i> TECHNICAL TOOLS</h3>
-                <ul class="skill-list">
-                    <li>Research & Process Tools: UML diagrams, ERD diagrams</li>
-                    <li>Deployment & Web Servers: Apache configuration, Linux deployment, CGI programming</li>
-                </ul>
-            </div>
-        </div>
-        
         <!-- Projects Section -->
         <section class="projects-section">
             <h2 class="section-title">PROJECT PORTFOLIO</h2>
             
+            <!-- Filter Buttons -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+                <button class="filter-btn" data-filter="powerbi">Power BI</button>
+                <button class="filter-btn" data-filter="excel">Excel</button>
+                <button class="filter-btn" data-filter="python">Python</button>
+                <button class="filter-btn" data-filter="java">Java</button>
+                <button class="filter-btn" data-filter="sql">SQL</button>
+            </div>
+            
             <div class="projects-grid">
-                <!-- Project 1 -->
-                <a href="Project1.html" class="project-card">
-                    <div class="project-card-header">
-                        <h3>Financial Stock Prediction Using Machine Learning Models</h3>
-                        <div class="project-card-tools">Python (Scikit-Learn), Weka</div>
+                <!-- Project 1 - Power BI -->
+                <a href="project6.html" class="project-card" data-category="powerbi sql">
+                    <div class="project-image">
+                        <div class="image-placeholder powerbi-bg">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
                     </div>
-                    <div class="project-card-content">
-                        <ul>
-                            <li>Developed three classification models (Genetic Programming, Multi-Layer Perceptron, Decision Tree) to predict stock purchases from historical data.</li>
-                            <li>Applied Wilcoxon signed-rank tests to statistically compare model performance (GP vs. MLP).</li>
-                        </ul>
-                    </div>
-                    <div class="project-card-footer">
-                        <span class="view-project-btn">View Project</span>
-                    </div>
-                </a>
-                
-                <!-- Project 2 -->
-                <a href="project5.html" class="project-card">
-                    <div class="project-card-header">
-                        <h3>Climate-Health ETL Pipeline & Dashboard</h3>
-                        <div class="project-card-tools">Python (Pandas), SQLite, Power BI, VS Code</div>
-                    </div>
-                    <div class="project-card-content">
-                        <ul>
-                            <li>Developed an end-to-end ETL pipeline analyzing 436 health-weather records across 9 Ugandan districts.</li>
-                            <li>Cleaned data (handled missing values, automated validation) using Pandas.</li>
-                            <li>Built a SQLite database with optimized queries to aggregate trends.</li>
-                        </ul>
-                    </div>
-                    <div class="project-card-footer">
-                        <span class="view-project-btn">View Project</span>
-                    </div>
-                </a>
-                
-                <!-- Project 3 -->
-                <a href="project4.html" class="project-card">
-                    <div class="project-card-header">
-                        <h3>Team Orienteering Problem (TOP) Solver</h3>
-                        <div class="project-card-tools">Java</div>
-                    </div>
-                    <div class="project-card-content">
-                        <ul>
-                            <li>Designed an Ant Colony Optimization (ACO) algorithm to maximize rewards for vehicle fleets under time/distance constraints.</li>
-                            <li>Implemented pheromone updates, heuristic-based node selection, and constraint handling for feasible routes.</li>
-                            <li>Analysed results from 10+ stochastic runs to validate robustness.</li>
-                        </ul>
-                    </div>
-                    <div class="project-card-footer">
-                        <span class="view-project-btn">View Project</span>
-                    </div>
-                </a>
-                
-                <!-- Project 4 -->
-                <a href="project2.html" class="project-card">
-                    <div class="project-card-header">
-                        <h3>Traveling Salesman Problem (TSP) Optimization</h3>
-                        <div class="project-card-tools">Java</div>
-                    </div>
-                    <div class="project-card-content">
-                        <ul>
-                            <li>Compared Simulated Annealing (SA) and Tabu Search on TSP instances (8–25 cities).</li>
-                            <li>Evaluated perturbation methods, neighbourhood definitions, and runtime performance.</li>
-                            <li>Demonstrated adaptability in tuning hyperparameters for optimal solutions.</li>
-                        </ul>
-                    </div>
-                    <div class="project-card-footer">
-                        <span class="view-project-btn">View Project</span>
-                    </div>
-                </a>
-                
-                <!-- Project 5 -->
-                <a href="project5.html" class="project-card">
                     <div class="project-card-header">
                         <h3>Financial Health Dashboard</h3>
-                        <div class="project-card-tools">Power BI, SQL</div>
+                        <div class="project-card-tools">Power BI, SQL, DAX</div>
                     </div>
-                    <div class="project-card-content">
-                        <ul>
-                            <li>Developed an interactive dashboard tracking budget vs. actual spend using SQL-backed star schema and DAX measures.</li>
-                            <li>Optimized Power Query transformations, improving data refresh efficiency by 20%.</li>
-                            <li>Visualized KPIs including Loss Ratio, Customer Retention, and Regional Risk Exposure.</li>
-                        </ul>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 2 - Power BI -->
+                <a href="project5.html" class="project-card" data-category="powerbi python sql">
+                    <div class="project-image">
+                        <div class="image-placeholder powerbi-bg">
+                            <i class="fas fa-clinic-medical"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Climate-Health Dashboard</h3>
+                        <div class="project-card-tools">Python, Power BI, SQL</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 3 - Excel -->
+                <a href="excel-project1.html" class="project-card" data-category="excel">
+                    <div class="project-image">
+                        <div class="image-placeholder excel-bg">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Sales Performance Analysis</h3>
+                        <div class="project-card-tools">Excel, Power Query</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 4 - Python -->
+                <a href="Project1.html" class="project-card" data-category="python">
+                    <div class="project-image">
+                        <div class="image-placeholder python-bg">
+                            <i class="fas fa-chart-area"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Stock Prediction Model</h3>
+                        <div class="project-card-tools">Python, Scikit-Learn</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 5 - Java -->
+                <a href="project4.html" class="project-card" data-category="java">
+                    <div class="project-image">
+                        <div class="image-placeholder java-bg">
+                            <i class="fas fa-route"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Team Orienteering Solver</h3>
+                        <div class="project-card-tools">Java, ACO Algorithm</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 6 - Java -->
+                <a href="project2.html" class="project-card" data-category="java">
+                    <div class="project-image">
+                        <div class="image-placeholder java-bg">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>TSP Optimization</h3>
+                        <div class="project-card-tools">Java, Tabu Search</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 7 - Excel -->
+                <a href="excel-project2.html" class="project-card" data-category="excel">
+                    <div class="project-image">
+                        <div class="image-placeholder excel-bg">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Budget Forecasting Model</h3>
+                        <div class="project-card-tools">Excel, Regression Analysis</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 8 - Power BI -->
+                <a href="powerbi-project3.html" class="project-card" data-category="powerbi sql">
+                    <div class="project-image">
+                        <div class="image-placeholder powerbi-bg">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Customer Analytics Dashboard</h3>
+                        <div class="project-card-tools">Power BI, SQL, Segmentation</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 9 - Python -->
+                <a href="python-project3.html" class="project-card" data-category="python">
+                    <div class="project-image">
+                        <div class="image-placeholder python-bg">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Neural Network Implementation</h3>
+                        <div class="project-card-tools">Python, TensorFlow</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 10 - SQL -->
+                <a href="sql-project1.html" class="project-card" data-category="sql">
+                    <div class="project-image">
+                        <div class="image-placeholder sql-bg">
+                            <i class="fas fa-database"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Database Optimization</h3>
+                        <div class="project-card-tools">SQL, Query Optimization</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 11 - SQL -->
+                <a href="sql-project2.html" class="project-card" data-category="sql">
+                    <div class="project-image">
+                        <div class="image-placeholder sql-bg">
+                            <i class="fas fa-server"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>ETL Pipeline Development</h3>
+                        <div class="project-card-tools">SQL, ETL, Data Warehousing</div>
+                    </div>
+                    <div class="project-card-footer">
+                        <span class="view-project-btn">View Project</span>
+                    </div>
+                </a>
+                
+                <!-- Project 12 - SQL -->
+                <a href="sql-project3.html" class="project-card" data-category="sql">
+                    <div class="project-image">
+                        <div class="image-placeholder sql-bg">
+                            <i class="fas fa-table"></i>
+                        </div>
+                    </div>
+                    <div class="project-card-header">
+                        <h3>Data Modeling & Schema Design</h3>
+                        <div class="project-card-tools">SQL, Star Schema, Data Modeling</div>
                     </div>
                     <div class="project-card-footer">
                         <span class="view-project-btn">View Project</span>
@@ -485,9 +573,40 @@
     </div>
 
     <script>
-        // Simple animation for elements when they come into view
+        // Filter functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.card, .project-card');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            // Filter projects based on category
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    const filterValue = button.getAttribute('data-filter');
+                    
+                    // Show/hide projects based on filter
+                    projectCards.forEach(card => {
+                        if (filterValue === 'all') {
+                            card.classList.remove('hidden');
+                        } else {
+                            const categories = card.getAttribute('data-category').split(' ');
+                            if (categories.includes(filterValue)) {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Simple animation for elements when they come into view
+            const cards = document.querySelectorAll('.project-card');
             
             // Intersection Observer for scroll animations
             const observer = new IntersectionObserver((entries) => {

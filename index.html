@@ -3,156 +3,1018 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kutloano Molefe - Portfolio</title>
+    <title>Software Development & Data Science</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            min-height: 100vh;
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
         }
-
-        .split-screen {
+        
+        .split-container {
             display: flex;
+            width: 100%;
             height: 100vh;
-            width: 100vw;
         }
-
+        
         .half {
-            flex: 1;
+            width: 50%;
+            height: 100%;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            transition: all 0.5s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
-
-        .half:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        
+        /* Left side - Software Development */
+        .dev-container {
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            transition: all 0.5s ease;
+            position: relative;
+        }
+        
+        .dev-scene {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Central Code Editor */
+        .code-editor {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            z-index: 10;
+            animation: pulse 3s infinite;
+        }
+        
+        .editor-header {
+            background: #3a3a3a;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .editor-dots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+        
+        .editor-content {
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .code-line {
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: typeLine 0.5s forwards;
+        }
+        
+        .code-line:nth-child(1) { animation-delay: 0.5s; color: #c678dd; }
+        .code-line:nth-child(2) { animation-delay: 1s; color: #e06c75; }
+        .code-line:nth-child(3) { animation-delay: 1.5s; color: #61afef; }
+        .code-line:nth-child(4) { animation-delay: 2s; color: #98c379; }
+        .code-line:nth-child(5) { animation-delay: 2.5s; color: #d19a66; }
+        
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .floating-element:hover {
+            transform: scale(1.1);
+            z-index: 20;
+        }
+        
+        .element-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .element-title {
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        /* Specific element positions and animations */
+        .web-dev {
+            top: 15%;
+            left: 20%;
+            animation: float 8s ease-in-out infinite;
+            color: #4dc0ff;
+            background: rgba(77, 192, 255, 0.15);
+        }
+        
+        .mobile-dev {
+            top: 15%;
+            right: 20%;
+            animation: float 7s ease-in-out infinite;
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.15);
+        }
+        
+        .backend {
+            bottom: 20%;
+            left: 15%;
+            animation: float 9s ease-in-out infinite;
+            color: #a17fe0;
+            background: rgba(161, 127, 224, 0.15);
+        }
+        
+        .frontend {
+            bottom: 20%;
+            right: 15%;
+            animation: float 8.5s ease-in-out infinite;
+            color: #ffe066;
+            background: rgba(255, 224, 102, 0.15);
+        }
+        
+        .ux-ui {
+            top: 40%;
+            left: 5%;
+            animation: float 7.5s ease-in-out infinite;
+            color: #ff9a76;
+            background: rgba(255, 154, 118, 0.15);
+        }
+        
+        .database {
+            top: 40%;
+            right: 5%;
+            animation: float 8.7s ease-in-out infinite;
+            color: #4cd97b;
+            background: rgba(76, 217, 123, 0.15);
+        }
+        
+        .api {
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: float 9.5s ease-in-out infinite;
+            color: #ffb3c1;
+            background: rgba(255, 179, 193, 0.15);
+        }
+        
+        .android {
+            top: 5%;
+            left: 40%;
+            animation: float 8.2s ease-in-out infinite;
+            color: #a4c639;
+            background: rgba(164, 198, 57, 0.15);
+        }
+        
+        .ios {
+            top: 5%;
+            right: 40%;
+            animation: float 7.8s ease-in-out infinite;
+            color: #999999;
+            background: rgba(153, 153, 153, 0.15);
+        }
+        
+        .figma {
+            bottom: 40%;
+            left: 25%;
+            animation: float 8.9s ease-in-out infinite;
+            color: #f24e1e;
+            background: rgba(242, 78, 30, 0.15);
+        }
+        
+        .canva {
+            bottom: 40%;
+            right: 25%;
+            animation: float 8.3s ease-in-out infinite;
+            color: #00c4cc;
+            background: rgba(0, 196, 204, 0.15);
+        }
+        
+        /* Connection lines */
+        .connection {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            height: 2px;
+            transform-origin: 0 0;
             z-index: 1;
         }
-
-        .half:hover:before {
-            background: rgba(0, 0, 0, 0.3);
+        
+        /* Data particles */
+        .data-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00C9FF;
+            opacity: 0;
         }
-
-        .software {
-            background: linear-gradient(to right, #000000, #333333, #555555, #777777, #999999);
+        
+        /* Right side - Data Science */
+        .data-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-
-        .data {
-            background: linear-gradient(to right, #283838, #2D5545);
+        
+        .keyboard {
+            background: linear-gradient(145deg, #1a2530, #0d161f);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            display: inline-block;
+            width: 90%;
+            max-width: 600px;
         }
-
-        .content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            padding: 20px;
-            max-width: 80%;
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
         }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            font-weight: 800;
-        }
-
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-            font-size: 1rem;
+        
+        .key {
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(145deg, #2a3b4d, #223141);
+            border: 1px solid #2c3e50;
+            border-radius: 10px;
+            box-shadow: 
+                0 4px 0 #2c3e50,
+                0 6px 0 #1a2530,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ecf0f1;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            position: relative;
+            user-select: none;
         }
-
-        .btn:hover {
-            background: white;
-            color: black;
+        
+        .key i {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
         }
-
-        .icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
+        
+        .key-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
         }
-
-        @media (max-width: 768px) {
-            .split-screen {
+        
+        /* Special keys styling */
+        .excel-key {
+            background: linear-gradient(145deg, #217346, #1a5c38);
+            border: 1px solid #1a5c38;
+            box-shadow: 
+                0 4px 0 #1a5c38,
+                0 6px 0 #13402a,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .python-key {
+            background: linear-gradient(145deg, #3776ab, #2b5c89);
+            border: 1px solid #2b5c89;
+            box-shadow: 
+                0 4px 0 #2b5c89,
+                0 6px 0 #1e4162,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .mysql-key {
+            background: linear-gradient(145deg, #00758f, #005c71);
+            border: 1px solid #005c71;
+            box-shadow: 
+                0 4px 0 #005c71,
+                0 6px 0 #004354,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .powerbi-key {
+            background: linear-gradient(145deg, #f2c811, #d9b20e);
+            border: 1px solid #d9b20e;
+            color: #2c3e50;
+            box-shadow: 
+                0 4px 0 #d9b20e,
+                0 6px 0 #b3970b,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .ml-key {
+            background: linear-gradient(145deg, #ff6b35, #e05a2d);
+            border: 1px solid #e05a2d;
+            box-shadow: 
+                0 4px 0 #e05a2d,
+                0 6px 0 #c14b25,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .ai-key {
+            background: linear-gradient(145deg, #8e44ad, #793a9c);
+            border: 1px solid #793a9c;
+            box-shadow: 
+                0 4px 0 #793a9c,
+                0 6px 0 #632b82,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .tableau-key {
+            background: linear-gradient(145deg, #6271c0, #4f5ba3);
+            border: 1px solid #4f5ba3;
+            box-shadow: 
+                0 4px 0 #4f5ba3,
+                0 6px 0 #3e4982,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .r-key {
+            background: linear-gradient(145deg, #276dc3, #1c5aac);
+            border: 1px solid #1c5aac;
+            box-shadow: 
+                0 4px 0 #1c5aac,
+                0 6px 0 #15488c,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .large-key {
+            grid-column: span 2;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+            50% { box-shadow: 0 10px 40px rgba(0, 201, 255, 0.3); }
+            100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+        }
+        
+        @keyframes typeLine {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes moveParticle {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        /* Key glow animations */
+        .excel-glow {
+            animation: excel-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes excel-glow {
+            0% { 
+                box-shadow: 0 4px 0 #1a5c38,
+                0 6px 0 #13402a,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(33, 115, 70, 0.8),
+                0 0 25px rgba(33, 115, 70, 0.6),
+                0 0 35px rgba(33, 115, 70, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #1a5c38,
+                0 6px 0 #13402a,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+        }
+        
+        .python-glow {
+            animation: python-glow 3s ease-in-out infinite;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes python-glow {
+            0% { 
+                box-shadow: 0 4px 0 #2b5c89,
+                0 6px 0 #1e4162,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(55, 118, 171, 0.8),
+                0 0 25px rgba(55, 118, 171, 0.6),
+                0 0 35px rgba(55, 118, 171, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #2b5c89,
+                0 6px 0 #1e4162,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+        }
+        
+        .mysql-glow {
+            animation: mysql-glow 3s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        
+        @keyframes mysql-glow {
+            0% { 
+                box-shadow: 0 4px 0 #005c71,
+                0 6px 0 #004354,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(0, 117, 143, 0.8),
+                0 0 25px rgba(0, 117, 143, 0.6),
+                0 0 35px rgba(0, 117, 143, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #005c71,
+                0 6px 0 #004354,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+        }
+        
+        .powerbi-glow {
+            animation: powerbi-glow 3s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes powerbi-glow {
+            0% { 
+                box-shadow: 0 4px 0 #d9b20e,
+                0 6px 0 #b3970b,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(242, 200, 17, 0.8),
+                0 0 25px rgba(242, 200, 17, 0.6),
+                0 0 35px rgba(242, 200, 17, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #d9b20e,
+                0 6px 0 #b3970b,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+        }
+        
+        .ml-glow {
+            animation: ml-glow 3s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        
+        @keyframes ml-glow {
+            0% { 
+                box-shadow: 0 4px 0 #e05a2d,
+                0 6px 0 #c14b25,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(255, 107, 53, 0.8),
+                0 0 25px rgba(255, 107, 53, 0.6),
+                0 0 35px rgba(255, 107, 53, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #e05a2d,
+                0 6px 0 #c14b25,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+        }
+        
+        .ai-glow {
+            animation: ai-glow 3s ease-in-out infinite;
+            animation-delay: 2.5s;
+        }
+        
+        @keyframes ai-glow {
+            0% { 
+                box-shadow: 0 4px 0 #793a9c,
+                0 6px 0 #632b82,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(142, 68, 173, 0.8),
+                0 0 25px rgba(142, 68, 173, 0.6),
+                0 0 35px rgba(142, 68, 173, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #793a9c,
+                0 6px 0 #632b82,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 极2);
+                transform: translateY(0);
+            }
+        }
+        
+        .tableau-glow {
+            animation: tableau-glow 3s ease-in-out infinite;
+            animation-delay: 3s;
+        }
+        
+        @keyframes tableau-glow {
+            0% { 
+                box-shadow: 0 4px 0 #4f5ba3,
+                0 6px 0 #3e4982,
+                0 8px 10px rgba(0, 0, 极, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(98, 113, 192, 0.8),
+                0 0 25px rgba(98, 113, 192, 0.6),
+                0 极 35px rgba(98, 113, 192, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #4f5ba3,
+                0 6px 0 #3e极2,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+        }
+        
+        .r-glow {
+            animation: r-glow 3s ease-in-out infinite;
+            animation-delay: 3.5s;
+        }
+        
+        @keyframes r-glow {
+            0% { 
+                box-shadow: 0 4px 0 #1c5aac,
+                0 6px 0 #15488c,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(39, 109, 195, 0.8),
+                0 0 25px rgba(39, 109, 195, 0.6),
+                0 0 35px rgba(39, 109, 195, 0.4);
+                transform: translateY(-5px);
+            }
+            100% { 
+                box-shadow: 0 4px 0 #1c5aac,
+                0 6极 0 #15488c,
+                0 8px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .split-container {
                 flex-direction: column;
             }
             
-            h1 {
-                font-size: 2rem;
+            .half {
+                width: 100%;
+                height: 50%;
             }
             
-            p {
-                font-size: 1rem;
+            .key {
+                height: 60px;
             }
             
-            .icon {
-                font-size: 3rem;
+            .key i {
+                font-size: 1.5rem;
             }
+        }
+        
+        @media (max-width: 768px) {
+            .floating-element {
+                width: 90px;
+                height: 90px;
+                padding: 10px;
+            }
+            
+            .element-icon {
+                font-size: 1.8rem;
+            }
+            
+            .element-title {
+                font-size: 0.7rem;
+            }
+            
+            .code-editor {
+                width: 250px;
+                height: 180px;
+            }
+        }
+		.neon-button {
+            position: absolute;
+            bottom: 30px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+            animation: neon-pulse 2s infinite;
+        }
+        
+        .software-btn {
+            background: rgba(0, 201, 255, 0.8);
+            color: #fff;
+            left: 50%;
+            transform: translateX(-50%);
+            
+        }
+        
+        .data-btn {
+            background: rgba(242, 200, 17, 0.8);
+            color: #2c3e50;
+            left: 75%;
+            transform: translateX(-50%);
+         
+        }
+        
+        .neon-button:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 45px currentColor;
         }
     </style>
 </head>
 <body>
-    <div class="split-screen">
-        <div class="half software" onclick="navigateToSoftware()">
-            <div class="content">
-                <div class="icon">💻</div>
-                <h1>Software Development</h1>
-                <p>Full-Stack Web & Mobile Applications</p>
-                <button class="btn">View Projects</button>
+    <div class="split-container">
+        <!-- Left side - Software Development -->
+        <div class="half">
+            <div class="dev-container">
+                <div class="dev-scene">
+                    <!-- Central Code Editor -->
+                    <div class="code-editor">
+                        <div class="editor-header">
+                            <div class="editor-dots">
+                                <div class="dot red"></div>
+                                <div class="dot yellow"></div>
+                                <div class="dot green"></div>
+                            </div>
+                        </div>
+                        <div class="editor-content">
+                            <div class="code-line">function createAnimation() {</div>
+                            <div class="code-line">  const elements = [Web, Mobile];</div>
+                            <div class="code-line">  elements.forEach(el => {</div>
+                            <div class="code-line">    animate(el);</div>
+                            <div class="code-line">  });</div>
+                            <div class="code-line">}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating elements representing different technologies -->
+                    <div class="floating-element web-dev">
+                        <div class="element-icon">🌐</div>
+                        <div class="element-title">Web Development</div>
+                    </div>
+                    
+                    <div class="floating-element mobile-dev">
+                        <div class="element-icon">📱</div>
+                        <div class="element-title">Mobile Development</div>
+                    </div>
+                    
+                    <div class="floating-element backend">
+                        <div class="element-icon">⚙️</div>
+                        <div class="element-title">Backend</div>
+                    </div>
+                    
+                    <div class="floating-element frontend">
+                        <div class="element-icon">🎨</div>
+                        <div class="element-title">Frontend</div>
+                    </div>
+                    
+                    <div class="floating-element ux-ui">
+                        <div class="element-icon">✨</div>
+                        <div class="element-title">UX/UI Design</div>
+                    </div>
+                    
+                    <div class="floating-element database">
+                        <div class="element-icon">💾</div>
+                        <div class="element-title">Databases</div>
+                    </div>
+                    
+                    <div class="floating-element api">
+                        <div class="element-icon">🔌</div>
+                        <div class="element-title">APIs</div>
+                    </div>
+                    
+                    <div class="floating-element android">
+                        <div class="element-icon">🤖</div>
+                        <div class="element-title">Android</div>
+                    </div>
+                    
+                    <div class="floating-element ios">
+                        <div class="element-icon">🍎</div>
+                        <div class="element-title">iOS</div>
+                    </div>
+                    
+                    <div class="floating-element figma">
+                        <div class="element-icon">🖌️</div>
+                        <div class="element-title">Figma</div>
+                    </div>
+                    
+                    <div class="floating-element canva">
+                        <div class="element-icon">🎭</div>
+                        <div class="element-title">Canva</div>
+                    </div>
+                     <button class="neon-button software-btn" onclick="window.location.href='software.html'">View Software Projects</button>
+                    <!-- Connection lines will be added by JavaScript -->
+                </div>
             </div>
         </div>
-        <div class="half data" onclick="navigateToData()">
-            <div class="content">
-                <div class="icon">📊</div>
-                <h1>Data & AI Projects</h1>
-                <p>Machine Learning & Data Analysis</p>
-                <button class="btn">View Projects</button>
+        
+        <!-- Right side - Data Science -->
+        <div class="half">
+		
+            <div class="data-container">
+			
+                <div class="keyboard">
+				<button class="neon-button data-btn" onclick="window.location.href='data.html'">View Data Projects</button>
+                    <div class="keypad">
+                        <div class="key excel-key excel-glow">
+                            <i class="fas fa-file-excel"></i>
+                            <div class="key-label">Excel</div>
+                        </div>
+                        <div class="key python-key python-glow">
+                            <i class="fab fa-python"></i>
+                            <div class="key-label">Python</div>
+                        </div>
+                        <div class="key mysql-key mysql-glow">
+                            <i class="fas fa-database"></i>
+                            <div class="key-label">MySQL</div>
+                        </div>
+                        <div class="key powerbi-key powerbi-glow">
+                            <i class="fas fa-chart-pie"></i>
+                            <div class="key-label">Power BI</div>
+                        </div>
+                        
+                        <div class="key ml-key ml-glow">
+                            <i class="fas fa-brain"></i>
+                            <div class="极-label">ML</div>
+                        </div>
+                        <div class="key ai-key ai-glow">
+                            <i class="fas fa-robot"></i>
+                            <div class="key-label">AI</div>
+                        </div>
+                        <div class="key tableau-key tableau-glow">
+                            <i class="fas fa-chart-bar"></i>
+                            <div class="key-label">Tableau</div>
+                        </div>
+                        <div class="key r-key r-glow">
+                            <i class="fab fa-r-project"></i>
+                            <div class="key-label">R</div>
+                        </div>
+                        
+                        <div class="key large-key ml-glow">
+                            <i class="fas fa-chart-line"></i>
+                            <div class="key-label">Data Analysis</div>
+                        </div>
+                        <div class="key large-key powerbi-glow">
+                            <i class="fas fa-paint-brush"></i>
+                            <div class="key-label">Data Visualization</div>
+                        </div>
+                        
+                        <div class="key python-glow">
+                            <i class="fas fa-calculator"></i>
+                            <div class="key-label">Statistics</div>
+                        </div>
+                        <div class="key ai-glow">
+                            <i class="fas fa-language"></i>
+                            <div class="key-label">NLP</div>
+                        </div>
+                        <div class="key mysql-glow">
+                            <i class="fas fa-cloud"></i>
+                            <div class="key-label">Cloud</div>
+                        </div>
+                        <div class="key python-glow">
+                            <i class="fas fa-server"></i>
+                            <div class="key-label">Big Data</div>
+							
+                        </div>
+						
+                    </div>
+					 
+                </div>
+				
             </div>
         </div>
     </div>
 
     <script>
-        function navigateToSoftware() {
-            window.location.href = 'software.html'; 
-        }
-        
-        function navigateToData() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const scene = document.querySelector('.dev-scene');
             
-            window.location.href = 'data.html';
-           
-        }
+            // Create connection lines between elements
+            createConnections();
+            
+            // Create moving data particles
+            createDataParticles();
+            
+            // Function to create connections between elements
+            function createConnections() {
+                const centerX = scene.offsetWidth / 2;
+                const centerY = scene.offsetHeight / 2;
+                
+                // Connect each element to the center
+                document.querySelectorAll('.floating-element').forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    const sceneRect = scene.getBoundingClientRect();
+                    
+                    const elementX = rect.left - sceneRect.left + rect.width / 2;
+                    const elementY = rect.top - sceneRect.top + rect.height / 2;
+                    
+                    const length = Math.sqrt(Math.pow(elementX - centerX, 2) + Math.pow(elementY - centerY, 2));
+                    const angle = Math.atan2(elementY - centerY, elementX - centerX) * 180 / Math.PI;
+                    
+                    const connection = document.createElement('div');
+                    connection.classList.add('connection');
+                    connection.style.width = `${length}px`;
+                    connection.style.left = `${centerX}px`;
+                    connection.style.top = `${centerY}px`;
+                    connection.style.transform = `rotate(${angle}deg)`;
+                    
+                    scene.appendChild(connection);
+                });
+            }
+            
+            // Function to create moving data particles
+            function createDataParticles() {
+                const centerX = scene.offsetWidth / 2;
+                const centerY = scene.offsetHeight / 2;
+                
+                // Create particles for each element
+                document.querySelectorAll('.floating-element').forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    const sceneRect = scene.getBoundingClientRect();
+                    
+                    const elementX = rect.left - sceneRect.left + rect.width / 2;
+                    const elementY = rect.top - sceneRect.top + rect.height / 2;
+                    
+                    // Create multiple particles for each connection
+                    for (let i = 0; i < 3; i++) {
+                        setTimeout(() => {
+                            createParticle(centerX, centerY, elementX, elementY, element.style.color);
+                        }, i * 1500);
+                    }
+                });
+            }
+            
+            // Function to create a single particle
+            function createParticle(fromX, fromY, toX, toY, color) {
+                const particle = document.createElement('div');
+                particle.classList.add('data-particle');
+                particle.style.left = `${fromX}px`;
+                particle.style.top = `${fromY}px`;
+                particle.style.background = color;
+                
+                scene.appendChild(particle);
+                
+                // Animate the particle along the path
+                const animation = particle.animate([
+                    { transform: `translate(0, 0)` },
+                    { transform: `translate(${toX - fromX}px, ${toY - fromY}px)` }
+                ], {
+                    duration: 2000,
+                    iterations: Infinity,
+                    easing: 'ease-in-out'
+                });
+                
+                // Also animate opacity
+                particle.animate([
+                    { opacity: 0 },
+                    { opacity: 1 },
+                    { opacity: 0 }
+                ], {
+                    duration: 2000,
+                    iterations: Infinity
+                });
+            }
+            
+            // Make elements draggable for interactivity
+            let draggedElement = null;
+            
+            document.querySelectorAll('.floating-element').forEach(element => {
+                element.addEventListener('mousedown', function(e) {
+                    draggedElement = this;
+                    this.style.zIndex = '100';
+                });
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (draggedElement) {
+                    draggedElement.style.left = `${e.clientX - draggedElement.offsetWidth / 2}px`;
+                    draggedElement.style.top = `${e.clientY - draggedElement.offsetHeight / 2}px`;
+                    
+                    // Update connections
+                    updateConnections();
+                }
+            });
+            
+            document.addEventListener('mouseup', function() {
+                if (draggedElement) {
+                    draggedElement.style.zIndex = '10';
+                    draggedElement = null;
+                }
+            });
+            
+            // Function to update connection lines when elements are moved
+            function updateConnections() {
+                // Remove existing connections
+                document.querySelectorAll('.connection').forEach(conn => conn.remove());
+                
+                // Create new connections
+                createConnections();
+            }
+        });
     </script>
 </body>
 </html>

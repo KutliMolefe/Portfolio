@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Performance Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .date {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            padding: 18px 25px;
+            font-size: 1.1rem;
+            color: #1d1d1f;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-item:hover {
+            color: #0066cc;
+        }
+
+        .dashboard-section {
+            padding: 40px 0;
+            background: white;
+            text-align: center;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #1d1d1f;
+        }
+
+        .dashboard-image {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(45deg, #f5f5f7, #e0e0e0);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            padding: 70px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #1d1d1f;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #0066cc;
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-positive {
+            color: #34c759;
+        }
+
+        .card-negative {
+            color: #ff3b30;
+        }
+
+        .card-neutral {
+            color: #ff9500;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .article-content p {
+            margin-bottom: 25px;
+        }
+
+        .highlight {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 4px solid #0066cc;
+            margin: 30px 0;
+        }
+
+        .highlight-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+            font-size: 1.3rem;
+        }
+
+        .recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .recommendation {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .recommendation i {
+            font-size: 2.5rem;
+            color: #0066cc;
+            margin-bottom: 20px;
+        }
+
+        .recommendation h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: #1d1d1f;
+            color: #f5f5f7;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .footer-link {
+            color: #f5f5f7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #0066cc;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section {
+                padding: 50px 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+
+            .image-placeholder {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>Financial Performance Dashboard</h1>
+            <p class="subtitle">Eastern Cape Region Analysis & Risk Assessment</p>
+            <p class="date">Report Generated: August 23, 2025</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <a href="#executive-summary" class="nav-item">Executive Summary</a>
+        <a href="#financial-overview" class="nav-item">Financial Overview</a>
+        <a href="#risk-analysis" class="nav-item">Risk Analysis</a>
+        <a href="#recommendations" class="nav-item">Recommendations</a>
+    </nav>
+
+    <section class="dashboard-section">
+        <div class="container">
+            <h2 class="dashboard-title">Financial Performance Dashboard</h2>
+            
+            <!-- Replace the placeholder with your actual dashboard image -->
+            <div class="image-placeholder">
+                <div>
+                    <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                  <img src="finance dasboard.png">
+                    
+                </div>
+            </div>
+            
+            
+        </div>
+    </section>
+
+    <section id="executive-summary" class="section">
+        <div class="container">
+            <h2 class="section-title">Executive Summary</h2>
+            <div class="summary-cards">
+                <div class="card">
+                    <h3 class="card-title">Scale of Operations</h3>
+                    <p class="card-value">Largest Region</p>
+                    <p class="card-description">Eastern Cape has the highest budget and actual spend among all regions, representing a critical hub for operations.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Budget Control</h3>
+                    <p class="card-value card-positive">-R 25.17M</p>
+                    <p class="card-description">Positive variance indicates efficient spending, coming in under budget by R 25.17 million.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Future Risk</h3>
+                    <p class="card-value card-negative">High Exposure</p>
+                    <p class="card-description">Projected to have the highest risk exposure by 2026, requiring proactive management.</p>
+                </div>
+            </div>
+
+            <div class="article-content">
+                <p>The Eastern Cape region represents both the largest operational footprint and the most significant future risk exposure within our organization. While current financial performance demonstrates strong budgetary control with a positive variance of R25.17 million, critical concerns loom in the form of catastrophic customer retention rates and projected risk escalation by 2026.</p>
+                
+                <div class="highlight">
+                    <div class="highlight-title">Key Findings</div>
+                    <p>• Eastern Cape has the highest budget and actual spend among all regions<br>
+                    • The region operated under budget by R25.17 million<br>
+                    • Customer retention is critically low at 0.88%<br>
+                    • Projected to have the highest risk exposure by 2026<br>
+                    • Current loss ratio remains strong at 1%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="financial-overview" class="section">
+        <div class="container">
+            <h2 class="section-title">Financial Performance Overview</h2>
+            <div class="summary-cards">
+                <div class="card">
+                    <h3 class="card-title">Budget vs Actual</h3>
+                    <p class="card-value card-positive">-R 25.17M</p>
+                    <p class="card-description">The negative sign indicates Actual Spend was lower than Budgeted amount, showing efficient cost management.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Loss Ratio</h3>
+                    <p class="card-value card-positive">1%</p>
+                    <p class="card-description">Exceptionally strong ratio indicating high profitability - only R 0.01 paid out in claims for every R 1.00 collected.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Customer Retention</h3>
+                    <p class="card-value card-negative">0.88%</p>
+                    <p class="card-description">Critical area of concern suggesting only 0.88% of customers were retained, indicating a churn rate over 99%.</p>
+                </div>
+            </div>
+
+            <div class="article-content">
+                <p>The Eastern Cape continues to be our largest regional operation, with both the highest budgetary allocation and actual expenditure. The region demonstrated efficient fiscal management by spending R25.17 million less than its allocated budget.</p>
+                
+                <p>The negative variance (indicated by the minus sign) represents a favorable outcome where Actual Spend was lower than the Budgeted amount. This suggests effective cost management practices within the region's operations.</p>
+                
+                <p>However, the astonishingly low customer retention rate of 0.88% presents a dire threat to the region's long-term viability. This retention crisis contradicts the positive financial metrics and requires immediate intervention.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="risk-analysis" class="section">
+        <div class="container">
+            <h2 class="section-title">Risk Exposure Analysis</h2>
+            <div class="summary-cards">
+                <div class="card">
+                    <h3 class="card-title">Average Regional Risk</h3>
+                    <p class="card-value card-neutral">56.84</p>
+                    <p class="card-description">Moderate level of existing risk within the region's current portfolio of policies. Warrants steady monitoring.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">2026 Risk Forecast</h3>
+                    <p class="card-value card-negative">Highest Exposure</p>
+                    <p class="card-description">Projected to have the highest risk exposure among all regions by 2026. Major red flag requiring immediate attention.</p>
+                </div>
+            </div>
+
+            <div class="article-content">
+                <p>While the Eastern Cape's current risk profile appears moderate with an average risk score of 56.84, projections indicate a concerning trajectory. By 2026, the region is forecasted to have the highest risk exposure in our entire organization.</p>
+                
+                <p>This risk projection contradicts the region's current strong loss ratio of 1%, which indicates excellent claims management and profitability in the short term. The disparity between current performance and future risk suggests emerging threats that have not yet materialized in claims data.</p>
+                
+                <div class="highlight">
+                    <div class="highlight-title">Risk Analysis Summary</div>
+                    <p>• Current risk score: 56.84 (moderate)<br>
+                    • Projected to have highest risk exposure by 2026<br>
+                    • Significant disconnect between current performance and future risk<br>
+                    • Suggests emerging threats not yet reflected in claims data<br>
+                    • Requires proactive risk mitigation strategies</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="recommendations" class="section">
+        <div class="container">
+            <h2 class="section-title">Recommendations</h2>
+            <div class="recommendations">
+                <div class="recommendation">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>Urgent: Customer Retention</h3>
+                    <p>Launch an immediate task force to diagnose the cause of the 99.12% customer churn. Address service quality, pricing, and satisfaction issues.</p>
+                </div>
+                <div class="recommendation">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Proactive Risk Mitigation</h3>
+                    <p>Form a risk management committee to analyze drivers of the projected 2026 risk exposure. Develop and implement mitigation strategies now.</p>
+                </div>
+                <div class="recommendation">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Leverage Budget Efficiency</h3>
+                    <p>Reallocate the R 25.17M in unspent budget to initiatives aimed at improving customer retention and pre-empting 2026 risk.</p>
+                </div>
+                <div class="recommendation">
+                    <i class="fas fa-search"></i>
+                    <h3>Enhance Monitoring Systems</h3>
+                    <p>Implement enhanced monitoring and early warning systems to identify emerging risks before they materialize into claims.</p>
+                </div>
+            </div>
+
+            <div class="article-content" style="margin-top: 40px;">
+                <p>The Eastern Cape region presents a complex picture of strong current financial performance coupled with significant future challenges. While the region's budgetary control and current profitability are commendable, the critically low customer retention rate and projected risk escalation require immediate and strategic intervention.</p>
+                
+                <p>By implementing the recommended actions, the organization can leverage the region's current financial strengths to address its vulnerabilities, ensuring the Eastern Cape remains a profitable and sustainable operation in the long term.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <p>Financial Performance Dashboard Report</p>
+            <p>© 2025 Financial Analytics Group. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Use</a>
+                <a href="#" class="footer-link">Legal</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
