@@ -37,11 +37,40 @@
             padding: 0 20px;
         }
         
+        /* Back Button Styles */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background-color: var(--secondary);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        .back-button:hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .back-button i {
+            margin-right: 6px;
+        }
+        
         header {
             padding: 30px 0 15px;
             text-align: center;
             border-bottom: 1px solid var(--border);
             margin-bottom: 25px;
+            position: relative; /* For positioning the back button */
         }
         
         h1 {
@@ -326,30 +355,36 @@
                 padding: 8px 16px;
                 font-size: 0.8rem;
             }
+            
+            /* Adjust back button for mobile */
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Back Button -->
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
         <header>
             <div class="header-content">
                 <h1>KUTLOANO MOLEFE</h1>
-                <div class="title">Data Scientist & AI Specialist</div>
+                <div class="title">Data Scientist, Actuarial Analyst & AI Specialist</div>
                 
                 <div class="compact-contact">
-                    <a href="#" class="compact-contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <span>Email</span>
-                    </a>
-                    <a href="#" class="compact-contact-item">
-                        <i class="fas fa-phone"></i>
-                        <span>Phone</span>
-                    </a>
-                    <a href="#" class="compact-contact-item">
+                    
+                    <a href="www.linkedin.com/in/kutloano-molefe-5aa21925b" class="compact-contact-item">
                         <i class="fab fa-linkedin"></i>
                         <span>LinkedIn</span>
                     </a>
-                    <a href="#" class="compact-contact-item">
+                    <a href="https://github.com/KutliMolefe" class="compact-contact-item">
                         <i class="fab fa-github"></i>
                         <span>GitHub</span>
                     </a>
@@ -357,10 +392,7 @@
             </div>
         </header>
         
-        <section class="profile-summary">
-            <h3><i class="fas fa-user"></i> PROFILE SUMMARY</h3>
-            <p>A results-driven and quantitatively-focused graduate with a passion for applying advanced machine learning, statistical modelling, and data engineering to solve complex problems. Proven project experience in developing end-to-end data pipelines (ETL), building predictive models, and creating insightful dashboards for strategic decision-making. Possessing a strong foundation in actuarial and statistical principles, complemented by hands-on technical proficiency in Python, SQL, Java, Power BI, and advanced MS Excel.</p>
-        </section>
+       
         
         <!-- Projects Section -->
         <section class="projects-section">
@@ -394,7 +426,7 @@
                 </a>
                 
                 <!-- Project 2 - Power BI -->
-                <a href="project5.html" class="project-card" data-category="powerbi python sql">
+                <a href="project5.html" class="project-card" data-category="powerbi">
                     <div class="project-image">
                         <div class="image-placeholder powerbi-bg">
                             <i class="fas fa-clinic-medical"></i>
@@ -410,7 +442,7 @@
                 </a>
                 
                 <!-- Project 3 - Excel -->
-                <a href="excel-project1.html" class="project-card" data-category="excel">
+                <a href="sales.html" class="project-card" data-category="excel">
                     <div class="project-image">
                         <div class="image-placeholder excel-bg">
                             <i class="fas fa-chart-bar"></i>
